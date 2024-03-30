@@ -1,7 +1,8 @@
 #ifndef ROBOT_H
 #define ROBOT_H
 
-#include "./src/observer/Observable.h"
+#include <vector>
+#include "src/util/Vector2D.h"
 
 // xhruzs00
 
@@ -11,26 +12,30 @@
  * This class stores the state and behavior of a robot. It can be observed
  * by other objects for changes in its state.
  */
-class Robot : public Observable {
+class Robot {
 public:
-    /**
-     * @brief Constructor for Robot.
-     */
-    Robot();
-
-    /**
-     * @brief Destructor for Robot.
-     */
+    Robot(Vector2D pos, Vector2D dir);
+    Robot(Vector2D pos, Vector2D dir, double rotationAngle, double detectionRange, double speed);
     ~Robot();
 
-    /**
-     * @brief Moves the robot by a given distance.
-     * 
-     * @param distance The distance to move the robot.
-     */
-    void move(float distance);
+    void setPos(Vector2D newPos);
+    void setDirection(Vector2D newDir);
+
+    Vector2D getPos();
+    Vector2D getDir();
+    double getSpeed();
+    double getRotationAngle();
+    double getDetectionRange();
+
+    void updatePos();
 
 private:
+    Vector2D pos = Vector2D(), 
+             dir = Vector2D();
+
+    double rotationAngle = 10;
+    double detectionRange = 10;
+    double speed = 10;
 };
 
 #endif

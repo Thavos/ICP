@@ -1,5 +1,4 @@
 #include "MapView.h"
-#include <QPainter>
 
 // xhruzs00
 

@@ -1,9 +1,12 @@
 #ifndef SIMULATIONCONTROLLER_H
 #define SIMULATIONCONTROLLER_H
 
-#include "./src/model/Robot.h"
-#include "./src/model/Map.h"
-#include "./src/view/MapView.h"
+#include <chrono>
+#include <thread>
+#include "src/model/Obstacle.h"
+#include "src/model/Robot.h"
+#include "src/model/Map.h"
+#include "src/view/MapView.h"
 
 // xhruzs00
 
@@ -15,36 +18,21 @@
  */
 class SimulationController {
 public:
-    /**
-     * @brief Constructor for SimulationController.
-     */
     SimulationController();
-
-    /**
-     * @brief Destructor for SimulationController.
-     */
     ~SimulationController();
 
-    /**
-     * @brief Starts the simulation process.
-     */
     void startSimulation();
-
-    /**
-     * @brief Pauses the simulation.
-     */
     void pauseSimulation();
-
-    /**
-     * @brief Resumes the simulation.
-     */
     void resumeSimulation();
+    void updateRobots();
+    void notifyView();
 
 private:
-    Map *simulationMap;     // The simulation environment
-    std::vector<Robot> robots;  // List of robots in the simulation
+    Map *simulationMap;
+    std::vector<Robot> robots;
+    std::vector<Obstacle> obstacles;
 
-    bool isSimulationRunning;   // Flag to check if the simulation is currently running
+    bool isRunning;
 };
 
 #endif

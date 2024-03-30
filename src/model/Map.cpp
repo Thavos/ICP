@@ -2,37 +2,34 @@
 
 // xhruzs00
 
-/**
- * @brief Constructs a new Map object.
- */
 Map::Map() {
+    size.x = 0;
+    size.y = 0;
+}
+Map::Map(double x, double y) {
+    size.x = x;
+    size.y = y;
+}
+Map::Map(Vector2D size) : size(size) {}
+Map::~Map() {}
+
+
+void Map::setRobots(std::vector<Robot> robotsVec) {
+    robots = robotsVec;
 }
 
-/**
- * @brief Destroys the Map object.
- */
-Map::~Map() {
+void Map::setObstacles(std::vector<Obstacle> obstacleVec) {
+    obstacles = obstacleVec;
 }
 
-/**
- * @brief Adds an obstacle to the map.
- * 
- * @param obstacle The obstacle to add to the map.
- */
-void Map::addObstacle(const Obstacle& obstacle) {
-    obstacles.push_back(obstacle);
-    // Notify observers about the change in the map
-    notifyObservers();
+std::vector<Robot> Map::getRobots() {
+    return robots;
 }
 
-void Map::clearObstacles(){
-    obstacles.clear();
-}
-
-std::vector<Obstacle>& Map::getObstacles() {
+std::vector<Obstacle> Map::getObstacles() {
     return obstacles;
 }
 
-float Map::getWidth() {return width;}
-float Map::getHeight() {return height;}
-
+Vector2D Map::getSize() {
+    return size;
+}

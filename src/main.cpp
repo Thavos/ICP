@@ -4,37 +4,16 @@
 #include <QPainter>
 #include <QPropertyAnimation>
 
-#include "src/view/main_window.h"
-
-class SquareWidget : public QWidget {
-public:
-    SquareWidget(QWidget *parent = nullptr) : QWidget(parent) {
-        // Create an animation
-        animation = new QPropertyAnimation(this, "geometry");
-        animation->setDuration(2000); // Duration in milliseconds
-        animation->setStartValue(QRect(0, 100, 100, 100));
-        animation->setEndValue(QRect(300, 100, 100, 100));
-        animation->setEasingCurve(QEasingCurve::InOutQuad);
-        animation->setLoopCount(-1); // Loop indefinitely
-        animation->start();
-    }
-
-protected:
-    void paintEvent(QPaintEvent *event) override {
-        QPainter painter(this);
-        (void)event;
-        painter.setBrush(QBrush(Qt::blue));
-        painter.drawRect(0, 0, 100, 100); // Draw a square
-    }
-
-private:
-    QPropertyAnimation *animation;
-};
+#include "src/view/MainWindow.h"
+#include "src/view/MyMainWindow.h"
+#include "src/controller/SimulationController.h"
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    MainWindow mainWindow;
+    // MainWindow mainWindow;
+    // mainWindow.show();
+    MyMainWindow mainWindow;
     mainWindow.show();
     return app.exec();
 }

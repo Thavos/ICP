@@ -2,7 +2,8 @@
 #define MAPVIEW_H
 
 #include <QWidget>
-#include "./src/model/Map.h"
+#include <QPainter>
+#include "src/model/Map.h"
 
 // xhruzs00
 

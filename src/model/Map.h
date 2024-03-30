@@ -2,8 +2,9 @@
 #define MAP_H
 
 #include <vector>
-#include "./src/observer/Observable.h"
-#include "./src/model/Obstacle.h"
+#include "src/util/Vector2D.h"
+#include "src/model/Obstacle.h"
+#include "src/model/Robot.h"
 
 // xhruzs00
 
@@ -11,36 +12,26 @@
  * @brief The Map class represents the simulation environment.
  *
  * This class stores the layout and properties of the simulation environment,
- * including obstacles and other features. It can be observed by other
- * objects for changes.
+ * including obstacles and robots.
  */
-class Map : public Observable {
+class Map {
 public:
-    /**
-     * @brief Constructor for Map.
-     */
     Map();
-
-    /**
-     * @brief Destructor for Map.
-     */
+    Map(double x, double y);
+    Map(Vector2D size);
     ~Map();
 
-    /**
-     * @brief Adds an obstacle to the map.
-     * 
-     * @param obstacle The obstacle to add to the map.
-     */
-    void addObstacle(const Obstacle& obstacle);
+    void setRobots(std::vector<Robot> robotsVec);
+    void setObstacles(std::vector<Obstacle> obstacleVec);
 
-    void clearObstacles();
-    std::vector<Obstacle>& getObstacles();
-    float getWidth();
-    float getHeight();
+    std::vector<Robot> getRobots();
+    std::vector<Obstacle> getObstacles();
+    Vector2D getSize();
 
 private:
-    std::vector<Obstacle> obstacles;  // List of obstacles on the map
-    float width, height; // Map dimensions
+    std::vector<Obstacle> obstacles; 
+    std::vector<Robot> robots;
+    Vector2D size;
 };
 
 #endif

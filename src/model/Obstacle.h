@@ -1,7 +1,7 @@
 #ifndef OBSTACLE_H
 #define OBSTACLE_H
 
-#include "./src/observer/Observable.h" // If Obstacle is an observable
+#include "src/util/Vector2D.h"
 
 // xhruzs00
 
@@ -11,28 +11,15 @@
  * This class stores the properties of an obstacle. It can be observed
  * by other objects, like robots, to react to its presence or changes.
  */
-class Obstacle : public Observable {
+class Obstacle {
 public:
-    /**
-     * @brief Constructor for Obstacle.
-     */
-    Obstacle(float x, float y, float width, float height, float rotation);
-
-    /**
-     * @brief Destructor for Obstacle.
-     */
+    Obstacle(Vector2D pos);
     ~Obstacle();
 
-    float getX();
-    float getY();
-    float getWidth();
-    float getHeight();
-    float getRotation();
+    Vector2D getPos();
 
 private:
-    float x, y;
-    float width, height;
-    float rotation;
+    Vector2D pos;
 };
 
 #endif
