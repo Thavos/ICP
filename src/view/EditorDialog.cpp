@@ -1,26 +1,69 @@
 #include "EditorDialog.h"
 
 EditorDialog::EditorDialog(QWidget *parent) : QDialog(parent) {
-    setWindowTitle("Map Editor");
-    resize(600, 400); // Adjust the size according to your needs
+    setupUI();
+}
 
-    auto *textEdit = new QTextEdit(this);
-    auto *btnSave = new QPushButton("Save Map", this);
+void EditorDialog::setupUI(){
+    setWindowTitle("Map Editor");
+
+    resize(1200, 1000); // Adjust the size according to your needs
+    mapView = new EditorMapView(this);
+    btnSave = new QPushButton("Save", this);
+    btnAddObstacle = new QRadioButton("Add Obstacle", this);
+    btnAddRobot = new QRadioButton("Add Robot", this);
+    btnAddRobot->setChecked(true);
+
+    robotDirectionInput = new QLineEdit(this);
+    detectionRangeInput = new QLineEdit(this);
+    turningAngleInput = new QLineEdit(this);
+    turningDirectionInput = new QComboBox(this);
+    turningDirectionInput->addItem("Left");
+    turningDirectionInput->addItem("Right");
+
+    //Robot parameters layout
+    auto* robotParamsLayout = new QFormLayout();
+    robotParamsLayout->addRow("Direction", robotDirectionInput);
+    robotParamsLayout->addRow("Detection Range", detectionRangeInput);
+    robotParamsLayout->addRow("Turning Direction", turningDirectionInput);
+    robotParamsLayout->addRow("Turning Angle", turningAngleInput);
+
 
     // Layout to arrange the text edit and button
-    auto *layout = new QVBoxLayout();
-    layout->addWidget(textEdit);
+    auto *modeLayout = new QVBoxLayout();
+    modeLayout->addWidget(btnAddRobot);
+    modeLayout->addWidget(btnAddObstacle);
+
+    auto *groupMode = new QGroupBox("Editing Mode", this);
+    groupMode->setLayout(modeLayout);
+
+    auto *layout = new QHBoxLayout();
+    layout->addWidget(groupMode);
+    layout->addWidget(mapView);
     layout->addWidget(btnSave);
     setLayout(layout);
 
     // Connect the save button to the saveMap slot
     connect(btnSave, &QPushButton::clicked, this, &EditorDialog::saveMap);
+    connect(btnAddRobot, &QRadioButton::toggled, [this](bool checked){
+        if (checked) mapView->setEditMode("Robot");
+    });
+    connect(btnAddObstacle, &QRadioButton::toggled, [this](bool checked){
+        if (checked) mapView->setEditMode("Obstacle");
+    });
 }
 
 void EditorDialog::saveMap() {
-    QFile file("map.txt");
-    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        QTextStream out(&file);
-        file.close();
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save Map"), "", tr("Map Files (*.txt)"));
+    if (fileName.isEmpty()) return;
+
+    QFile file(fileName);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QMessageBox::warning(this, tr("Unable to open file"), file.errorString());
+        return;
     }
+
+    QTextStream out(&file);
+    out << mapView->getMapDataAsString(); // Assuming getMapDataAsString() returns a string representation of the map
+    file.close();
 }

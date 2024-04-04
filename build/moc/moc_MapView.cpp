@@ -1,18 +1,19 @@
 /****************************************************************************
-** Meta object code from reading C++ file 'MapView.h'
+** Meta object code from reading C++ file 'SimulationMapView.h'
 **
-** Created by: The Qt Meta Object Compiler version 67 (Qt 5.12.8)
+** Created by: The Qt Meta Object Compiler version 67 (Qt 5.15.3)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
 
-#include "../../src/view/MapView.h"
+#include <memory>
+#include "../../src/view/SimulationMapView.h"
 #include <QtCore/qbytearray.h>
 #include <QtCore/qmetatype.h>
 #if !defined(Q_MOC_OUTPUT_REVISION)
-#error "The header file 'MapView.h' doesn't include <QObject>."
+#error "The header file 'SimulationMapView.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
-#error "This file was generated using the moc from 5.12.8. It"
+#error "This file was generated using the moc from 5.15.3. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -31,10 +32,10 @@ struct qt_meta_stringdata_MapView_t {
     )
 static const qt_meta_stringdata_MapView_t qt_meta_stringdata_MapView = {
     {
-QT_MOC_LITERAL(0, 0, 7) // "MapView"
+QT_MOC_LITERAL(0, 0, 7) // "SimulationMapView"
 
     },
-    "MapView"
+    "SimulationMapView"
 };
 #undef QT_MOC_LITERAL
 
@@ -54,16 +55,16 @@ static const uint qt_meta_data_MapView[] = {
        0        // eod
 };
 
-void MapView::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+void SimulationMapView::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
-    Q_UNUSED(_o);
-    Q_UNUSED(_id);
-    Q_UNUSED(_c);
-    Q_UNUSED(_a);
+    (void)_o;
+    (void)_id;
+    (void)_c;
+    (void)_a;
 }
 
-QT_INIT_METAOBJECT const QMetaObject MapView::staticMetaObject = { {
-    &QWidget::staticMetaObject,
+QT_INIT_METAOBJECT const QMetaObject SimulationMapView::staticMetaObject = {{
+    QMetaObject::SuperData::link<QGraphicsView::staticMetaObject>(),
     qt_meta_stringdata_MapView.data,
     qt_meta_data_MapView,
     qt_static_metacall,
@@ -72,22 +73,22 @@ QT_INIT_METAOBJECT const QMetaObject MapView::staticMetaObject = { {
 } };
 
 
-const QMetaObject *MapView::metaObject() const
+const QMetaObject *SimulationMapView::metaObject() const
 {
     return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
 }
 
-void *MapView::qt_metacast(const char *_clname)
+void *SimulationMapView::qt_metacast(const char *_clname)
 {
     if (!_clname) return nullptr;
     if (!strcmp(_clname, qt_meta_stringdata_MapView.stringdata0))
         return static_cast<void*>(this);
-    return QWidget::qt_metacast(_clname);
+    return QGraphicsView::qt_metacast(_clname);
 }
 
-int MapView::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+int SimulationMapView::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
-    _id = QWidget::qt_metacall(_c, _id, _a);
+    _id = QGraphicsView::qt_metacall(_c, _id, _a);
     return _id;
 }
 QT_WARNING_POP

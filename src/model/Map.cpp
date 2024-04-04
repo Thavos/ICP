@@ -1,5 +1,7 @@
 #include "Map.h"
 
+#include <utility>
+
 // xhruzs00
 
 Map::Map() {
@@ -15,11 +17,11 @@ Map::~Map() {}
 
 
 void Map::setRobots(std::vector<Robot> robotsVec) {
-    robots = robotsVec;
+    robots = std::move(robotsVec);
 }
 
 void Map::setObstacles(std::vector<Obstacle> obstacleVec) {
-    obstacles = obstacleVec;
+    obstacles = std::move(obstacleVec);
 }
 
 std::vector<Robot> Map::getRobots() {

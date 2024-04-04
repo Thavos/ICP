@@ -6,7 +6,7 @@
 #include "src/model/Obstacle.h"
 #include "src/model/Robot.h"
 #include "src/model/Map.h"
-#include "src/view/MapView.h"
+#include "src/view/SimulationMapView.h"
 
 // xhruzs00
 

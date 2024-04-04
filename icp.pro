@@ -16,25 +16,27 @@ HEADERS += src/controller/SimulationController.h \
             src/observer/Observable.h \
             src/observer/Observer.h \
             src/util/Vector2D.h \
-            src/view/MapView.h \
+            src/view/SimulationMapView.h \
             src/view/MainWindow.h \
             src/view/SimulationDialog.h \
             src/view/EditorDialog.h \
             src/view/MyMainWindow.h \
-            src/view/MyMapView.h
+            src/view/MyMapView.h    \
+            src/view/EditorMapView.h
 
 SOURCES += src/controller/SimulationController.cpp \
             src/model/Map.cpp \
             src/model/Obstacle.cpp \
             src/model/Robot.cpp \
             src/util/Vector2D.cpp \
-            src/view/MapView.cpp \
+            src/view/SimulationMapView.cpp \
             src/main.cpp \
             src/view/MainWindow.cpp \
             src/view/SimulationDialog.cpp \
             src/view/EditorDialog.cpp \
             src/view/MyMainWindow.cpp \
-            src/view/MyMapView.cpp
+            src/view/MyMapView.cpp  \
+            src/view/EditorMapView.cpp
 
 # Custom commands
 QMAKE_CLEAN += -rf ./latex & rm -rf ./html

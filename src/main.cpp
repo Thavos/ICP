@@ -8,12 +8,12 @@
 #include "src/view/MyMainWindow.h"
 #include "src/controller/SimulationController.h"
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
-    // MainWindow mainWindow;
-    // mainWindow.show();
-    MyMainWindow mainWindow;
+    MainWindow mainWindow;
     mainWindow.show();
+//    MyMainWindow mainWindow;
+//    mainWindow.show();MyMainWindow mainWindow;
+//    mainWindow.show();
     return app.exec();
 }
