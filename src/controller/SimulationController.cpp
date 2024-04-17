@@ -2,34 +2,45 @@
 
 // xhruzs00
 
-SimulationController::SimulationController() {}
+SimulationController::SimulationController(Map &simulationMap, SimulationMapView &simulationView) 
+    : map(simulationMap), mapView(simulationView) {
+    connect(this, &SimulationController::robotPositionsUpdated, &mapView, &SimulationMapView::updateRobotPositions);
+    robots = map.getRobots();
+    obstacles = map.getObstacles();
+}
 SimulationController::~SimulationController() {}
 
 void SimulationController::startSimulation() {
     isRunning = true;
-    while (isRunning) {
-        updateRobots();
-        // Notify View
-        std::this_thread::sleep_for(std::chrono::milliseconds(33));
-    }
+    qDebug() << "Simulation started";
+
+    QTimer::singleShot(0, this, &SimulationController::updateRobots);
 }
 
 void SimulationController::pauseSimulation() {
     isRunning = false;
+    qDebug() << "Simulation paused";
 }
 
 void SimulationController::resumeSimulation() {
     isRunning = true;
+    qDebug() << "Simulation resumed";
 }
 
 void SimulationController::updateRobots() {
+    qDebug() << "Updating robots...";
+
+    if (robots.empty()) {
+        qDebug() << "robots vector is empty!";
+        return;
+    }
+
     for (Robot& robot : robots)
     {
+        qDebug() << "Updating robot position...";
         robot.updatePos();
     }
-    // Notify View 
-}
 
-void SimulationController::notifyView() {
-
+    QTimer::singleShot(33, this, &SimulationController::updateRobots);
+    emit robotPositionsUpdated();
 }

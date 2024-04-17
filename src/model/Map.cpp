@@ -1,7 +1,5 @@
 #include "Map.h"
 
-#include <utility>
-
 // xhruzs00
 
 Map::Map() {
@@ -16,20 +14,20 @@ Map::Map(Vector2D size) : size(size) {}
 Map::~Map() {}
 
 
-void Map::setRobots(std::vector<Robot> robotsVec) {
-    robots = std::move(robotsVec);
-}
-
-void Map::setObstacles(std::vector<Obstacle> obstacleVec) {
-    obstacles = std::move(obstacleVec);
-}
-
-std::vector<Robot> Map::getRobots() {
+const std::vector<Robot>& Map::getRobots() const {
     return robots;
 }
 
-std::vector<Obstacle> Map::getObstacles() {
+const std::vector<Obstacle>& Map::getObstacles() const {
     return obstacles;
+}
+
+void Map::setRobots(std::vector<Robot>&& setRobots) {
+    robots = std::move(setRobots);
+}
+
+void Map::setObstacles(std::vector<Obstacle>&& setObstacles) {
+    obstacles = std::move(setObstacles);
 }
 
 Vector2D Map::getSize() {

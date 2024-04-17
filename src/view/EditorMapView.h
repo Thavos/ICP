@@ -4,6 +4,8 @@
 #include <QGraphicsView>
 #include <QMouseEvent>
 #include <QGraphicsScene>
+#include <QGraphicsEllipseItem> // For robot representation
+#include <QGraphicsRectItem>   // For obstacle representation
 #include "src/model/Map.h"
 
 class EditorMapView : public QGraphicsView {

@@ -4,6 +4,10 @@
 #include <QMainWindow>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <QDebug>
+#include <QTimer>
+#include "EditorDialog.h"
+#include "SimulationDialog.h"
 
 class MainWindow  : public QMainWindow{
     Q_OBJECT;

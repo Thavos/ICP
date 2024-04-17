@@ -1,6 +1,5 @@
 #include "MainWindow.h"
-#include "EditorDialog.h"
-#include "SimulationDialog.h"
+
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent){
     auto *widget = new QWidget(this);
@@ -27,6 +26,7 @@ void MainWindow::onSimulationClicked() {
     auto *dialog = new SimulationDialog(this);
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->show();
+    dialog->exec();
 }
 
 void MainWindow::onEditorClicked() {

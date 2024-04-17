@@ -1,6 +1,4 @@
 #include "EditorMapView.h"
-#include <QGraphicsEllipseItem> // For robot representation
-#include <QGraphicsRectItem>   // For obstacle representation
 
 EditorMapView::EditorMapView(QWidget *parent)
         : QGraphicsView(parent), map(new Map()) {

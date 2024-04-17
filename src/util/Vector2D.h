@@ -4,6 +4,7 @@
 // xhruzs00
 
 #include <cmath>
+#include <QDebug>
 
 /**
  * @brief The Vector2D class represents a two flaot values of X and Y.
@@ -17,14 +18,25 @@ public:
 
     double x, y;
     double getRotation();
-    // double getX() const;
-    // double getY() const;
-    // void setX(double newX);
-    // void setY(double newY);
 
-    // double getRotation();
-    // double getRotation(double x, double y);
-    // double getRotation(Vector2D dir);
+    static const Vector2D zero;
+    static const Vector2D one;
+    
+    Vector2D operator+(const Vector2D& other) const;
+    Vector2D operator-(const Vector2D& other) const;
+    Vector2D operator*(double scalar) const;
+    Vector2D operator/(double scalar) const;
+
+    Vector2D& operator+=(const Vector2D& other);
+    Vector2D& operator-=(const Vector2D& other);
+    Vector2D& operator*=(double scalar);
+    Vector2D& operator/=(double scalar);
+
+    bool operator<(const Vector2D& other) const;
+    bool operator>(const Vector2D& other) const;
+    bool operator<=(const Vector2D& other) const;
+    bool operator>=(const Vector2D& other) const;
+    bool operator==(const Vector2D& other) const;
 };
 
 #endif

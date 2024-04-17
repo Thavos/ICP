@@ -2,6 +2,7 @@
 #define MAP_H
 
 #include <vector>
+#include <utility>
 #include "src/util/Vector2D.h"
 #include "src/model/Obstacle.h"
 #include "src/model/Robot.h"
@@ -21,16 +22,17 @@ public:
     Map(Vector2D size);
     ~Map();
 
-    void setRobots(std::vector<Robot> robotsVec);
-    void setObstacles(std::vector<Obstacle> obstacleVec);
+    void setRobots(const std::vector<Robot>& robots);
+    void setObstacles(const std::vector<Obstacle>& obstacles);
 
-    std::vector<Robot> getRobots();
-    std::vector<Obstacle> getObstacles();
+    const std::vector<Robot>& getRobots() const;
+    const std::vector<Obstacle>& getObstacles() const;
+    
     Vector2D getSize();
 
 private:
-    std::vector<Obstacle> obstacles; 
     std::vector<Robot> robots;
+    std::vector<Obstacle> obstacles;
     Vector2D size;
 };
 

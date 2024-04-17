@@ -4,8 +4,9 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QMouseEvent>
+#include <QDebug>
+#include <memory>
 #include "src/model/Map.h"
-
 
 // xhruzs00
 
@@ -15,7 +16,7 @@
  * This class is responsible for rendering the map and its elements, such as 
  * robots and obstacles, to the screen.
  */
-class SimulationMapView : public QGraphicsView {
+class SimulationMapView : public QGraphicsView  {
     Q_OBJECT
 
 public:
@@ -24,13 +25,16 @@ public:
      * @param parent The parent widget, default is nullptr.
      */
     explicit SimulationMapView(QWidget *parent = nullptr);
+    explicit SimulationMapView(Map *mapPtr, QWidget *parent = nullptr);
 
     /**
      * @brief Destructor for SimulationMapView.
      */
     ~SimulationMapView() override;
 
-    void setSimulationMap(std::unique_ptr<Map> map);
+    void setSimulationMap(Map *mapPtr);
+
+    void populateScene();
 
 //protected:
 //    /**
@@ -41,9 +45,10 @@ public:
 
 private:
     QGraphicsScene* scene;
-    std::unique_ptr<Map> simulationMap;  // Pointer to the simulation map
+    Map *map;  // Pointer to the simulation map
 
-    void populateScene();
+public slots:
+    void updateRobotPositions();
 };
 
 #endif
