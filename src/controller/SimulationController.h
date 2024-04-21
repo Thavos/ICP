@@ -34,10 +34,10 @@ public slots:
     void updateRobots();    
 
 private:
-    Map map;
-    SimulationMapView mapView;
-    std::vector<Robot> robots;
-    std::vector<Obstacle> obstacles;
+    Map &map;
+    SimulationMapView &mapView;
+    // std::vector<Robot> &robots;
+    // std::vector<Obstacle> &obstacles;
 
     bool isRunning;
 

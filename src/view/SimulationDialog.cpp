@@ -2,7 +2,10 @@
 
 
 SimulationDialog::SimulationDialog(QWidget *parent)
-    : QDialog(parent), mapView(new SimulationMapView(this)) {
+    : QDialog(parent),
+      map(1000.0, 1000.0),
+      view(this, map),   
+      controller(map, view) {
     setWindowTitle("Simulation");
     resize(1100, 1100);
 
@@ -23,18 +26,14 @@ SimulationDialog::SimulationDialog(QWidget *parent)
     obstacles.emplace_back(pos5);
     obstacles.emplace_back(pos6);
 
-    Map simulationMap(100, 100);
-    simulationMap->setRobots(std::move(robots));
-    simulationMap->setObstacles(std::move(obstacles));
+    map.setRobots(std::move(robots));
+    map.setObstacles(std::move(obstacles));
 
-    SimulationMapView mapView();
-    mapView.setSimulationMap(&simulationMap);
-    QVBoxLayout layout(this);
-    layout->addWidget(mapView);
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    layout->addWidget(view.viewport());
     setLayout(layout);
 
-    SimulationController simulationController(simulationMap, mapView);
-    simulationController->startSimulation();
+    controller.startSimulation();
 }
 
 SimulationDialog::~SimulationDialog() {  }

@@ -18,17 +18,17 @@ class MyMapView : public QWidget {
   Q_OBJECT
 
 public:
-  explicit MyMapView(SimulationController* controller, Map* map, QWidget *parent = nullptr);
+  // explicit MyMapView(SimulationController* controller, Map* map, QWidget *parent = nullptr);
 
 protected:
-  void paintEvent(QPaintEvent* event) override;
+  // void paintEvent(QPaintEvent* event) override;
 
 private:
-  void drawMap(QPainter* painter);
-  void drawRobot(QPainter* painter);
-  void drawObstacles(QPainter* painter);
-  SimulationController* controller;
-  Map* map;
+  // void drawMap(QPainter* painter);
+  // void drawRobot(QPainter* painter);
+  // void drawObstacles(QPainter* painter);
+  // SimulationController* controller;
+  // Map* map;
 };
 
 #endif

@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <utility>
+#include <QDebug>
 #include "src/util/Vector2D.h"
 #include "src/model/Obstacle.h"
 #include "src/model/Robot.h"
@@ -22,11 +23,11 @@ public:
     Map(Vector2D size);
     ~Map();
 
-    void setRobots(const std::vector<Robot>& robots);
-    void setObstacles(const std::vector<Obstacle>& obstacles);
+    void setRobots(std::vector<Robot>&& newRobots);
+    void setObstacles(std::vector<Obstacle>&& newObstacles);
 
-    const std::vector<Robot>& getRobots() const;
-    const std::vector<Obstacle>& getObstacles() const;
+    std::vector<Robot>* getRobots();
+    std::vector<Obstacle>* getObstacles();
     
     Vector2D getSize();
 

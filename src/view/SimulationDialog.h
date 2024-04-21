@@ -16,11 +16,13 @@
 class SimulationDialog : public QDialog {
     Q_OBJECT
 public:
-    explicit SimulationDialog(QWidget *parent = nullptr);
-    virtual ~SimulationDialog() override;
+    SimulationDialog(QWidget *parent = nullptr);
+    ~SimulationDialog();
 
 private:
-
+    Map map;
+    SimulationMapView view;
+    SimulationController controller;
 };
 
 #endif //ICP_SIMULATION_DIALOG_H

@@ -5,14 +5,15 @@
 SimulationController::SimulationController(Map &simulationMap, SimulationMapView &simulationView) 
     : map(simulationMap), mapView(simulationView) {
     connect(this, &SimulationController::robotPositionsUpdated, &mapView, &SimulationMapView::updateRobotPositions);
-    robots = map.getRobots();
-    obstacles = map.getObstacles();
 }
 SimulationController::~SimulationController() {}
 
 void SimulationController::startSimulation() {
     isRunning = true;
     qDebug() << "Simulation started";
+
+    // robots = map.getRobots();
+    // obstacles = map.getObstacles();
 
     QTimer::singleShot(0, this, &SimulationController::updateRobots);
 }
@@ -30,17 +31,36 @@ void SimulationController::resumeSimulation() {
 void SimulationController::updateRobots() {
     qDebug() << "Updating robots...";
 
-    if (robots.empty()) {
-        qDebug() << "robots vector is empty!";
+    std::vector<Robot> *robotVec  = map.getRobots();
+
+    if (robotVec->empty()) {
+        qDebug() << "Robots vector is empty!";
         return;
     }
-
-    for (Robot& robot : robots)
+    
+    for (Robot& robotPtr : *robotVec)
     {
-        qDebug() << "Updating robot position...";
-        robot.updatePos();
+        Vector2D newPos = robotPtr.updatePos();
+        if(newPos.x < 0) {
+            newPos.x = 0;
+        }
+        if(newPos.y < 0) {
+            newPos.y = 0;
+        }
+
+        if(newPos.x > map.getSize().x) {
+            newPos.x = map.getSize().x;
+        }
+        if(newPos.y > map.getSize().y) {
+            newPos.y = map.getSize().y;
+        }
+
+        qDebug() << robotPtr.getPos().x << " " << robotPtr.getPos().y;
+        robotPtr.setPos(newPos);
+        qDebug() << robotPtr.getPos().x << " " << robotPtr.getPos().y;
     }
+
 
     QTimer::singleShot(33, this, &SimulationController::updateRobots);
     emit robotPositionsUpdated();
-}
+} 

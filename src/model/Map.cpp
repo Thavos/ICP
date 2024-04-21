@@ -13,21 +13,20 @@ Map::Map(double x, double y) {
 Map::Map(Vector2D size) : size(size) {}
 Map::~Map() {}
 
-
-const std::vector<Robot>& Map::getRobots() const {
-    return robots;
+void Map::setRobots(std::vector<Robot>&& newRobots) {
+    robots = std::move(newRobots);
 }
 
-const std::vector<Obstacle>& Map::getObstacles() const {
-    return obstacles;
+void Map::setObstacles(std::vector<Obstacle>&& newObstacles) {
+    obstacles = std::move(newObstacles);
 }
 
-void Map::setRobots(std::vector<Robot>&& setRobots) {
-    robots = std::move(setRobots);
+std::vector<Robot>* Map::getRobots() {
+    return &robots;
 }
 
-void Map::setObstacles(std::vector<Obstacle>&& setObstacles) {
-    obstacles = std::move(setObstacles);
+std::vector<Obstacle>* Map::getObstacles() {
+    return &obstacles;
 }
 
 Vector2D Map::getSize() {

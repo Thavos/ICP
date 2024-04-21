@@ -24,15 +24,12 @@ public:
      * @brief Constructor for SimulationMapView.
      * @param parent The parent widget, default is nullptr.
      */
-    explicit SimulationMapView(QWidget *parent = nullptr);
-    explicit SimulationMapView(Map *mapPtr, QWidget *parent = nullptr);
+    explicit SimulationMapView(QWidget *parent, Map &simulationMap);
 
     /**
      * @brief Destructor for SimulationMapView.
      */
     ~SimulationMapView() override;
-
-    void setSimulationMap(Map *mapPtr);
 
     void populateScene();
 
@@ -45,7 +42,7 @@ public:
 
 private:
     QGraphicsScene* scene;
-    Map *map;  // Pointer to the simulation map
+    Map &map;
 
 public slots:
     void updateRobotPositions();

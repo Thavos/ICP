@@ -27,7 +27,7 @@ public:
     double getRotationAngle();
     double getDetectionRange();
 
-    void updatePos();
+    Vector2D updatePos();
 
 private:
     Vector2D pos = Vector2D(), 

@@ -16,6 +16,7 @@ double Robot::getSpeed() { return speed; }
 double Robot::getRotationAngle() { return rotationAngle; }
 double Robot::getDetectionRange() { return detectionRange; }
 
-void Robot::updatePos() {
-    pos.x += speed;
+Vector2D Robot::updatePos() {
+    Vector2D newPos = pos + dir * speed;
+    return newPos;
 }
