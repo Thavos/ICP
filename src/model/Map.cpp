@@ -13,6 +13,16 @@ Map::Map(double x, double y) {
 Map::Map(Vector2D size) : size(size) {}
 Map::~Map() {}
 
+void Map::setSize(Vector2D setSize) {
+    size.x = setSize.x;
+    size.y = setSize.y;
+}
+
+void Map::setSize(double x, double y) {
+    size.x = x;
+    size.y = y;
+}
+
 void Map::setRobots(std::vector<Robot>&& newRobots) {
     robots = std::move(newRobots);
 }

@@ -32,6 +32,7 @@ public:
     ~SimulationMapView() override;
 
     void populateScene();
+    void resizeView();
 
 //protected:
 //    /**

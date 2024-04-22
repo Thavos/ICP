@@ -13,15 +13,11 @@ HEADERS += src/controller/SimulationController.h \
             src/model/Map.h \
             src/model/Obstacle.h \
             src/model/Robot.h \
-            src/observer/Observable.h \
-            src/observer/Observer.h \
             src/util/Vector2D.h \
             src/view/SimulationMapView.h \
             src/view/MainWindow.h \
             src/view/SimulationDialog.h \
             src/view/EditorDialog.h \
-            src/view/MyMainWindow.h \
-            src/view/MyMapView.h    \
             src/view/EditorMapView.h
 
 SOURCES += src/controller/SimulationController.cpp \
@@ -34,8 +30,6 @@ SOURCES += src/controller/SimulationController.cpp \
             src/view/MainWindow.cpp \
             src/view/SimulationDialog.cpp \
             src/view/EditorDialog.cpp \
-            src/view/MyMainWindow.cpp \
-            src/view/MyMapView.cpp  \
             src/view/EditorMapView.cpp
 
 # Custom commands

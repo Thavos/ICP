@@ -62,15 +62,11 @@ SOURCES       = src/controller/SimulationController.cpp \
 		src/view/MainWindow.cpp \
 		src/view/SimulationDialog.cpp \
 		src/view/EditorDialog.cpp \
-		src/view/MyMainWindow.cpp \
-		src/view/MyMapView.cpp \
 		src/view/EditorMapView.cpp build/moc/moc_SimulationController.cpp \
 		build/moc/moc_SimulationMapView.cpp \
 		build/moc/moc_MainWindow.cpp \
 		build/moc/moc_SimulationDialog.cpp \
 		build/moc/moc_EditorDialog.cpp \
-		build/moc/moc_MyMainWindow.cpp \
-		build/moc/moc_MyMapView.cpp \
 		build/moc/moc_EditorMapView.cpp
 OBJECTS       = build/obj/SimulationController.o \
 		build/obj/Map.o \
@@ -82,16 +78,12 @@ OBJECTS       = build/obj/SimulationController.o \
 		build/obj/MainWindow.o \
 		build/obj/SimulationDialog.o \
 		build/obj/EditorDialog.o \
-		build/obj/MyMainWindow.o \
-		build/obj/MyMapView.o \
 		build/obj/EditorMapView.o \
 		build/obj/moc_SimulationController.o \
 		build/obj/moc_SimulationMapView.o \
 		build/obj/moc_MainWindow.o \
 		build/obj/moc_SimulationDialog.o \
 		build/obj/moc_EditorDialog.o \
-		build/obj/moc_MyMainWindow.o \
-		build/obj/moc_MyMapView.o \
 		build/obj/moc_EditorMapView.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
@@ -172,15 +164,11 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		src/model/Map.h \
 		src/model/Obstacle.h \
 		src/model/Robot.h \
-		src/observer/Observable.h \
-		src/observer/Observer.h \
 		src/util/Vector2D.h \
 		src/view/SimulationMapView.h \
 		src/view/MainWindow.h \
 		src/view/SimulationDialog.h \
 		src/view/EditorDialog.h \
-		src/view/MyMainWindow.h \
-		src/view/MyMapView.h \
 		src/view/EditorMapView.h src/controller/SimulationController.cpp \
 		src/model/Map.cpp \
 		src/model/Obstacle.cpp \
@@ -191,8 +179,6 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		src/view/MainWindow.cpp \
 		src/view/SimulationDialog.cpp \
 		src/view/EditorDialog.cpp \
-		src/view/MyMainWindow.cpp \
-		src/view/MyMapView.cpp \
 		src/view/EditorMapView.cpp
 QMAKE_TARGET  = icp
 DESTDIR       = build/
@@ -374,8 +360,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents src/controller/SimulationController.h src/model/Map.h src/model/Obstacle.h src/model/Robot.h src/observer/Observable.h src/observer/Observer.h src/util/Vector2D.h src/view/SimulationMapView.h src/view/MainWindow.h src/view/SimulationDialog.h src/view/EditorDialog.h src/view/MyMainWindow.h src/view/MyMapView.h src/view/EditorMapView.h $(DISTDIR)/
-	$(COPY_FILE) --parents src/controller/SimulationController.cpp src/model/Map.cpp src/model/Obstacle.cpp src/model/Robot.cpp src/util/Vector2D.cpp src/view/SimulationMapView.cpp src/main.cpp src/view/MainWindow.cpp src/view/SimulationDialog.cpp src/view/EditorDialog.cpp src/view/MyMainWindow.cpp src/view/MyMapView.cpp src/view/EditorMapView.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents src/controller/SimulationController.h src/model/Map.h src/model/Obstacle.h src/model/Robot.h src/util/Vector2D.h src/view/SimulationMapView.h src/view/MainWindow.h src/view/SimulationDialog.h src/view/EditorDialog.h src/view/EditorMapView.h $(DISTDIR)/
+	$(COPY_FILE) --parents src/controller/SimulationController.cpp src/model/Map.cpp src/model/Obstacle.cpp src/model/Robot.cpp src/util/Vector2D.cpp src/view/SimulationMapView.cpp src/main.cpp src/view/MainWindow.cpp src/view/SimulationDialog.cpp src/view/EditorDialog.cpp src/view/EditorMapView.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -417,9 +403,9 @@ compiler_moc_predefs_clean:
 build/moc/moc_predefs.h: /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 	g++ -pipe -O2 -std=gnu++1z -Wall -W -dM -E -o build/moc/moc_predefs.h /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: build/moc/moc_SimulationController.cpp build/moc/moc_SimulationMapView.cpp build/moc/moc_MainWindow.cpp build/moc/moc_SimulationDialog.cpp build/moc/moc_EditorDialog.cpp build/moc/moc_MyMainWindow.cpp build/moc/moc_MyMapView.cpp build/moc/moc_EditorMapView.cpp
+compiler_moc_header_make_all: build/moc/moc_SimulationController.cpp build/moc/moc_SimulationMapView.cpp build/moc/moc_MainWindow.cpp build/moc/moc_SimulationDialog.cpp build/moc/moc_EditorDialog.cpp build/moc/moc_EditorMapView.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) build/moc/moc_SimulationController.cpp build/moc/moc_SimulationMapView.cpp build/moc/moc_MainWindow.cpp build/moc/moc_SimulationDialog.cpp build/moc/moc_EditorDialog.cpp build/moc/moc_MyMainWindow.cpp build/moc/moc_MyMapView.cpp build/moc/moc_EditorMapView.cpp
+	-$(DEL_FILE) build/moc/moc_SimulationController.cpp build/moc/moc_SimulationMapView.cpp build/moc/moc_MainWindow.cpp build/moc/moc_SimulationDialog.cpp build/moc/moc_EditorDialog.cpp build/moc/moc_EditorMapView.cpp
 build/moc/moc_SimulationController.cpp: src/controller/SimulationController.h \
 		src/model/Obstacle.h \
 		src/util/Vector2D.h \
@@ -440,6 +426,15 @@ build/moc/moc_SimulationMapView.cpp: src/view/SimulationMapView.h \
 	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/thavos/projects/icp/build/moc/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/thavos/projects/icp -I/home/thavos/projects/icp -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include src/view/SimulationMapView.h -o build/moc/moc_SimulationMapView.cpp
 
 build/moc/moc_MainWindow.cpp: src/view/MainWindow.h \
+		src/view/EditorDialog.h \
+		src/view/SimulationMapView.h \
+		src/model/Map.h \
+		src/util/Vector2D.h \
+		src/model/Obstacle.h \
+		src/model/Robot.h \
+		src/view/EditorMapView.h \
+		src/view/SimulationDialog.h \
+		src/controller/SimulationController.h \
 		build/moc/moc_predefs.h \
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/thavos/projects/icp/build/moc/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/thavos/projects/icp -I/home/thavos/projects/icp -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include src/view/MainWindow.h -o build/moc/moc_MainWindow.cpp
@@ -465,29 +460,6 @@ build/moc/moc_EditorDialog.cpp: src/view/EditorDialog.h \
 		build/moc/moc_predefs.h \
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/thavos/projects/icp/build/moc/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/thavos/projects/icp -I/home/thavos/projects/icp -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include src/view/EditorDialog.h -o build/moc/moc_EditorDialog.cpp
-
-build/moc/moc_MyMainWindow.cpp: src/view/MyMainWindow.h \
-		src/view/MyMapView.h \
-		src/controller/SimulationController.h \
-		src/model/Obstacle.h \
-		src/util/Vector2D.h \
-		src/model/Robot.h \
-		src/model/Map.h \
-		src/view/SimulationMapView.h \
-		build/moc/moc_predefs.h \
-		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/thavos/projects/icp/build/moc/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/thavos/projects/icp -I/home/thavos/projects/icp -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include src/view/MyMainWindow.h -o build/moc/moc_MyMainWindow.cpp
-
-build/moc/moc_MyMapView.cpp: src/view/MyMapView.h \
-		src/controller/SimulationController.h \
-		src/model/Obstacle.h \
-		src/util/Vector2D.h \
-		src/model/Robot.h \
-		src/model/Map.h \
-		src/view/SimulationMapView.h \
-		build/moc/moc_predefs.h \
-		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/thavos/projects/icp/build/moc/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/thavos/projects/icp -I/home/thavos/projects/icp -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include src/view/MyMapView.h -o build/moc/moc_MyMapView.cpp
 
 build/moc/moc_EditorMapView.cpp: src/view/EditorMapView.h \
 		src/model/Map.h \
@@ -547,14 +519,15 @@ build/obj/SimulationMapView.o: src/view/SimulationMapView.cpp src/view/Simulatio
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/SimulationMapView.o src/view/SimulationMapView.cpp
 
 build/obj/main.o: src/main.cpp src/view/MainWindow.h \
-		src/view/MyMainWindow.h \
-		src/view/MyMapView.h \
-		src/controller/SimulationController.h \
-		src/model/Obstacle.h \
-		src/util/Vector2D.h \
-		src/model/Robot.h \
+		src/view/EditorDialog.h \
+		src/view/SimulationMapView.h \
 		src/model/Map.h \
-		src/view/SimulationMapView.h
+		src/util/Vector2D.h \
+		src/model/Obstacle.h \
+		src/model/Robot.h \
+		src/view/EditorMapView.h \
+		src/view/SimulationDialog.h \
+		src/controller/SimulationController.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/main.o src/main.cpp
 
 build/obj/MainWindow.o: src/view/MainWindow.cpp src/view/MainWindow.h \
@@ -587,25 +560,6 @@ build/obj/EditorDialog.o: src/view/EditorDialog.cpp src/view/EditorDialog.h \
 		src/view/EditorMapView.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/EditorDialog.o src/view/EditorDialog.cpp
 
-build/obj/MyMainWindow.o: src/view/MyMainWindow.cpp src/view/MyMainWindow.h \
-		src/view/MyMapView.h \
-		src/controller/SimulationController.h \
-		src/model/Obstacle.h \
-		src/util/Vector2D.h \
-		src/model/Robot.h \
-		src/model/Map.h \
-		src/view/SimulationMapView.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/MyMainWindow.o src/view/MyMainWindow.cpp
-
-build/obj/MyMapView.o: src/view/MyMapView.cpp src/view/MyMapView.h \
-		src/controller/SimulationController.h \
-		src/model/Obstacle.h \
-		src/util/Vector2D.h \
-		src/model/Robot.h \
-		src/model/Map.h \
-		src/view/SimulationMapView.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/MyMapView.o src/view/MyMapView.cpp
-
 build/obj/EditorMapView.o: src/view/EditorMapView.cpp src/view/EditorMapView.h \
 		src/model/Map.h \
 		src/util/Vector2D.h \
@@ -627,12 +581,6 @@ build/obj/moc_SimulationDialog.o: build/moc/moc_SimulationDialog.cpp
 
 build/obj/moc_EditorDialog.o: build/moc/moc_EditorDialog.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/moc_EditorDialog.o build/moc/moc_EditorDialog.cpp
-
-build/obj/moc_MyMainWindow.o: build/moc/moc_MyMainWindow.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/moc_MyMainWindow.o build/moc/moc_MyMainWindow.cpp
-
-build/obj/moc_MyMapView.o: build/moc/moc_MyMapView.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/moc_MyMapView.o build/moc/moc_MyMapView.cpp
 
 build/obj/moc_EditorMapView.o: build/moc/moc_EditorMapView.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/moc_EditorMapView.o build/moc/moc_EditorMapView.cpp

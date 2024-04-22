@@ -36,8 +36,6 @@ public slots:
 private:
     Map &map;
     SimulationMapView &mapView;
-    // std::vector<Robot> &robots;
-    // std::vector<Obstacle> &obstacles;
 
     bool isRunning;
 

@@ -10,7 +10,10 @@ SimulationMapView::SimulationMapView(QWidget *parent, Map &simulationMap)
     : QGraphicsView(parent), map(simulationMap) {
     scene = new QGraphicsScene(this);
     this->setScene(scene);
-    scene->setSceneRect(0,0,800,600);
+    
+    Vector2D size = map.getSize();
+    QRectF sceneRect(0, 0, size.x, size.y);
+    scene->setSceneRect(sceneRect);
 
     populateScene();
 }
@@ -39,3 +42,8 @@ void SimulationMapView::updateRobotPositions() {
     populateScene();
 }
 
+void SimulationMapView::resizeView() {
+    Vector2D size = map.getSize();
+    QRectF sceneRect(0, 0, size.x, size.y);
+    scene->setSceneRect(sceneRect);
+}

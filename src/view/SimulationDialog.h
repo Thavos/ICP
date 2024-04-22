@@ -9,6 +9,8 @@
 #include <QDebug>
 #include <QTimer>
 #include <QCoreApplication>
+#include <QFileDialog>
+#include <QPushButton>
 #include "src/model/Robot.h"
 #include "src/controller/SimulationController.h"
 #include "SimulationMapView.h"
@@ -19,10 +21,21 @@ public:
     SimulationDialog(QWidget *parent = nullptr);
     ~SimulationDialog();
 
+    void startSimulation();
+    void stopSimulation();
+    void closeWindow();
+
 private:
     Map map;
     SimulationMapView view;
     SimulationController controller;
+    bool firstStart = true;
+
+    QPushButton *playButton;
+    QPushButton *stopButton;
+    QPushButton *menuButton;
+
+    void loadFile();
 };
 
 #endif //ICP_SIMULATION_DIALOG_H

@@ -26,11 +26,14 @@ void SimulationController::pauseSimulation() {
 void SimulationController::resumeSimulation() {
     isRunning = true;
     qDebug() << "Simulation resumed";
+    QTimer::singleShot(0, this, &SimulationController::updateRobots);
 }
 
 void SimulationController::updateRobots() {
-    qDebug() << "Updating robots...";
+    if(isRunning == false) 
+        return;
 
+    qDebug() << "Updating robots...";
     std::vector<Robot> *robotVec  = map.getRobots();
 
     if (robotVec->empty()) {
@@ -55,9 +58,7 @@ void SimulationController::updateRobots() {
             newPos.y = map.getSize().y;
         }
 
-        qDebug() << robotPtr.getPos().x << " " << robotPtr.getPos().y;
         robotPtr.setPos(newPos);
-        qDebug() << robotPtr.getPos().x << " " << robotPtr.getPos().y;
     }
 
 

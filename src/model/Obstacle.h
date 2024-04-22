@@ -14,6 +14,7 @@
 class Obstacle {
 public:
     Obstacle(Vector2D pos);
+    Obstacle(double x, double y);
     ~Obstacle();
 
     Vector2D getPos();

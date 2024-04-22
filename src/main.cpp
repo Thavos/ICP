@@ -5,7 +5,6 @@
 #include <QPropertyAnimation>
 
 #include "src/view/MainWindow.h"
-#include "src/view/MyMainWindow.h"
 #include "src/controller/SimulationController.h"
 
 int main(int argc, char *argv[]) {

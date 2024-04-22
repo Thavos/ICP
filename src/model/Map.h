@@ -23,6 +23,8 @@ public:
     Map(Vector2D size);
     ~Map();
 
+    void setSize(Vector2D setSize);
+    void setSize(double x, double y);
     void setRobots(std::vector<Robot>&& newRobots);
     void setObstacles(std::vector<Obstacle>&& newObstacles);
 
