@@ -39,6 +39,10 @@ std::vector<Obstacle>* Map::getObstacles() {
     return &obstacles;
 }
 
+void Map::addRobot(const Robot& newRobot) {
+    robots.push_back(newRobot);
+}
+
 Vector2D Map::getSize() {
     return size;
 }

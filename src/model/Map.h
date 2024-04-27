@@ -28,6 +28,8 @@ public:
     void setRobots(std::vector<Robot>&& newRobots);
     void setObstacles(std::vector<Obstacle>&& newObstacles);
 
+    void addRobot(const Robot& newRobot);
+
     std::vector<Robot>* getRobots();
     std::vector<Obstacle>* getObstacles();
     

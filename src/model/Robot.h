@@ -14,8 +14,8 @@
  */
 class Robot {
 public:
-    Robot(Vector2D pos, Vector2D dir);
-    Robot(Vector2D pos, Vector2D dir, double rotationAngle, double detectionRange, double speed);
+    //Robot(Vector2D pos, Vector2D dir);
+    Robot(Vector2D pos, Vector2D dir, double rotationAngle, double detectionRange, bool turningDirection);
     ~Robot();
 
     void setPos(Vector2D newPos);
@@ -26,16 +26,25 @@ public:
     double getSpeed();
     double getRotationAngle();
     double getDetectionRange();
+    double getTurningAngle();
+    bool getTurningDirection();
 
     Vector2D updatePos();
+    void updateParameters(double newRotationAngle, double newDetectionRange, double newTurningAngle, bool newTurningDirection);
 
 private:
     Vector2D pos = Vector2D(), 
              dir = Vector2D();
 
-    double rotationAngle = 10;
-    double detectionRange = 10;
+    double rotationAngle;
+    double detectionRange;
+    bool turningDirection; // true = right, false = left
     double speed = 10;
+
+
+    void setRotationAngle(double newRotationAngle);
+    void setDetectionRange(double newDetectionRange);
+    void setTurningDirection(bool newTurningDirection);
 };
 
 #endif

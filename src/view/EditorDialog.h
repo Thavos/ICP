@@ -29,9 +29,11 @@ private slots:
     void saveMap();
 
 private:
+
     QLineEdit* robotDirectionInput;
     QLineEdit* detectionRangeInput;
     QComboBox* turningDirectionInput;
+    QComboBox* modeBox;
     QLineEdit* turningAngleInput;
     EditorMapView *mapView;
     QPushButton *btnSave;

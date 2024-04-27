@@ -13,6 +13,9 @@ void EditorDialog::setupUI(){
     btnAddObstacle = new QRadioButton("Add Obstacle", this);
     btnAddRobot = new QRadioButton("Add Robot", this);
     btnAddRobot->setChecked(true);
+    modeBox = new QComboBox(this);
+    modeBox->addItem("Placement Mode");
+    modeBox->addItem("Editing Mode");
 
     robotDirectionInput = new QLineEdit(this);
     detectionRangeInput = new QLineEdit(this);
@@ -21,6 +24,11 @@ void EditorDialog::setupUI(){
     turningDirectionInput->addItem("Left");
     turningDirectionInput->addItem("Right");
 
+    //Hint messages
+    robotDirectionInput->setToolTip("Enter the direction of the robot here(degrees)");
+    detectionRangeInput->setToolTip("Enter the detection range of the robot here");
+    turningAngleInput->setToolTip("Enter the turning angle of the robot here(degrees)");
+
     //Robot parameters layout
     auto* robotParamsLayout = new QFormLayout();
     robotParamsLayout->addRow("Direction", robotDirectionInput);
@@ -28,17 +36,26 @@ void EditorDialog::setupUI(){
     robotParamsLayout->addRow("Turning Direction", turningDirectionInput);
     robotParamsLayout->addRow("Turning Angle", turningAngleInput);
 
+    auto *groupRobotParams = new QGroupBox("Robot Parameters", this);
+    groupRobotParams->setLayout(robotParamsLayout);
 
-    // Layout to arrange the text edit and button
+
+    //Layout to arrange the text edit and button
     auto *modeLayout = new QVBoxLayout();
     modeLayout->addWidget(btnAddRobot);
     modeLayout->addWidget(btnAddObstacle);
+    modeLayout->addWidget(modeBox);
 
-    auto *groupMode = new QGroupBox("Editing Mode", this);
+    auto *groupMode = new QGroupBox("Mode", this);
     groupMode->setLayout(modeLayout);
 
+
+    auto *verticalLayout = new QVBoxLayout();
+    verticalLayout->addWidget(groupMode);
+    verticalLayout->addWidget(groupRobotParams);
+
     auto *layout = new QHBoxLayout();
-    layout->addWidget(groupMode);
+    layout->addLayout(verticalLayout);
     layout->addWidget(mapView);
     layout->addWidget(btnSave);
     setLayout(layout);
@@ -50,6 +67,11 @@ void EditorDialog::setupUI(){
     });
     connect(btnAddObstacle, &QRadioButton::toggled, [this](bool checked){
         if (checked) mapView->setEditMode("Obstacle");
+    });
+    connect(modeBox, QOverload<int>::of(&QComboBox::currentIndexChanged), [=](int index) {
+        QString mode = modeBox->itemText(index);
+        printf("Selected mode: %s\n", mode.toStdString().c_str());
+        mapView->setMode(mode);
     });
 }
 
