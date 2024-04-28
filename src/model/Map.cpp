@@ -43,6 +43,28 @@ void Map::addRobot(const Robot& newRobot) {
     robots.push_back(newRobot);
 }
 
+void Map::addObstacle(const Obstacle& newObstacle) {
+    obstacles.push_back(newObstacle);
+}
+
 Vector2D Map::getSize() {
     return size;
+}
+
+void Map::moveRobot(const Vector2D& oldPos, const Vector2D& newPos) {
+    for (Robot& robot : robots) {
+        if (robot.getPos() == oldPos) {
+            robot.setPos(newPos);
+            return;
+        }
+    }
+}
+
+void Map::moveObstacle(const Vector2D& oldPos, const Vector2D& newPos) {
+    for (Obstacle& obstacle : obstacles) {
+        if (obstacle.getPos() == oldPos) {
+            obstacle.setPos(newPos);
+            return;
+        }
+    }
 }

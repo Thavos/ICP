@@ -54,6 +54,7 @@ OBJECTS_DIR   = build/obj/
 
 SOURCES       = src/controller/SimulationController.cpp \
 		src/model/Map.cpp \
+		src/model/RobotParams.cpp \
 		src/model/Obstacle.cpp \
 		src/model/Robot.cpp \
 		src/util/Vector2D.cpp \
@@ -70,6 +71,7 @@ SOURCES       = src/controller/SimulationController.cpp \
 		build/moc/moc_EditorMapView.cpp
 OBJECTS       = build/obj/SimulationController.o \
 		build/obj/Map.o \
+		build/obj/RobotParams.o \
 		build/obj/Obstacle.o \
 		build/obj/Robot.o \
 		build/obj/Vector2D.o \
@@ -165,6 +167,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		icp.pro src/controller/SimulationController.h \
 		src/model/Map.h \
 		src/model/Obstacle.h \
+		src/model/RobotParams.h \
 		src/model/Robot.h \
 		src/util/Vector2D.h \
 		src/view/SimulationMapView.h \
@@ -173,6 +176,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		src/view/EditorDialog.h \
 		src/view/EditorMapView.h src/controller/SimulationController.cpp \
 		src/model/Map.cpp \
+		src/model/RobotParams.cpp \
 		src/model/Obstacle.cpp \
 		src/model/Robot.cpp \
 		src/util/Vector2D.cpp \
@@ -366,8 +370,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents src/controller/SimulationController.h src/model/Map.h src/model/Obstacle.h src/model/Robot.h src/util/Vector2D.h src/view/SimulationMapView.h src/view/MainWindow.h src/view/SimulationDialog.h src/view/EditorDialog.h src/view/EditorMapView.h $(DISTDIR)/
-	$(COPY_FILE) --parents src/controller/SimulationController.cpp src/model/Map.cpp src/model/Obstacle.cpp src/model/Robot.cpp src/util/Vector2D.cpp src/view/SimulationMapView.cpp src/main.cpp src/view/MainWindow.cpp src/view/SimulationDialog.cpp src/view/EditorDialog.cpp src/view/EditorMapView.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents src/controller/SimulationController.h src/model/Map.h src/model/Obstacle.h src/model/RobotParams.h src/model/Robot.h src/util/Vector2D.h src/view/SimulationMapView.h src/view/MainWindow.h src/view/SimulationDialog.h src/view/EditorDialog.h src/view/EditorMapView.h $(DISTDIR)/
+	$(COPY_FILE) --parents src/controller/SimulationController.cpp src/model/Map.cpp src/model/RobotParams.cpp src/model/Obstacle.cpp src/model/Robot.cpp src/util/Vector2D.cpp src/view/SimulationMapView.cpp src/main.cpp src/view/MainWindow.cpp src/view/SimulationDialog.cpp src/view/EditorDialog.cpp src/view/EditorMapView.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -505,6 +509,9 @@ build/obj/Map.o: src/model/Map.cpp src/model/Map.h \
 		src/model/Obstacle.h \
 		src/model/Robot.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/Map.o src/model/Map.cpp
+
+build/obj/RobotParams.o: src/model/RobotParams.cpp src/model/RobotParams.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/RobotParams.o src/model/RobotParams.cpp
 
 build/obj/Obstacle.o: src/model/Obstacle.cpp src/model/Obstacle.h \
 		src/util/Vector2D.h

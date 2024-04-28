@@ -14,6 +14,7 @@
 #include "src/model/Robot.h"
 #include "src/controller/SimulationController.h"
 #include "SimulationMapView.h"
+#include "src/model/RobotParams.h"
 
 class SimulationDialog : public QDialog {
     Q_OBJECT

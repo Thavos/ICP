@@ -29,6 +29,10 @@ public:
     void setObstacles(std::vector<Obstacle>&& newObstacles);
 
     void addRobot(const Robot& newRobot);
+    void addObstacle(const Obstacle& newObstacle);
+
+    void moveRobot(const Vector2D& oldPos, const Vector2D& newPos);
+    void moveObstacle(const Vector2D& oldPos, const Vector2D& newPos);
 
     std::vector<Robot>* getRobots();
     std::vector<Obstacle>* getObstacles();

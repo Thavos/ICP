@@ -11,3 +11,7 @@ Obstacle::~Obstacle() {}
 
 Vector2D Obstacle::getPos() { return pos; }
 
+void Obstacle::setPos(Vector2D newPos) {
+    pos = newPos;
+}
+

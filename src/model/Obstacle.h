@@ -18,6 +18,7 @@ public:
     ~Obstacle();
 
     Vector2D getPos();
+    void setPos(Vector2D newPos);
 
 private:
     Vector2D pos;

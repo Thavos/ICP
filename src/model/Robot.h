@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "src/util/Vector2D.h"
+#include "src/model/RobotParams.h"
 
 // xhruzs00
 
@@ -15,29 +16,32 @@
 class Robot {
 public:
     //Robot(Vector2D pos, Vector2D dir);
-    Robot(Vector2D pos, Vector2D dir, double rotationAngle, double detectionRange, bool turningDirection);
+    Robot(const Vector2D& pos);
+
+
+    Robot(const RobotParams& params, const Vector2D& pos);
     ~Robot();
 
-    void setPos(Vector2D newPos);
-    void setDirection(Vector2D newDir);
+    void setPos(const Vector2D& newPos);
+    void setDirection(const Vector2D& newDir);
 
     Vector2D getPos();
     Vector2D getDir();
     double getSpeed();
     double getRotationAngle();
     double getDetectionRange();
-    double getTurningAngle();
     bool getTurningDirection();
 
-    Vector2D updatePos();
-    void updateParameters(double newRotationAngle, double newDetectionRange, double newTurningAngle, bool newTurningDirection);
 
+    Vector2D updatePos();
+    void updateParameters(const RobotParams& params);
 private:
     Vector2D pos = Vector2D(), 
              dir = Vector2D();
 
-    double rotationAngle;
-    double detectionRange;
+
+    double rotationAngle;   //from 0 to 359 degrees
+    double detectionRange;  //TODO: get to know some real values
     bool turningDirection; // true = right, false = left
     double speed = 10;
 

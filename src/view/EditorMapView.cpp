@@ -19,7 +19,6 @@ void EditorMapView::setMode(const QString &m) {
 
 void EditorMapView::mousePressEvent(QMouseEvent *event) {
     QPointF scenePos = mapToScene(event->pos());
-    qDebug() << "currently at this scene pos:" << scenePos;
     if (mode == "Placement Mode") {
         if (placementMode == "Robot") {
             addRobotAtPosition(scenePos);
@@ -29,24 +28,7 @@ void EditorMapView::mousePressEvent(QMouseEvent *event) {
     } else if (mode == "Editing Mode") {
         QGraphicsItem *item = scene->itemAt(scenePos, QTransform());
         if (item) {
-            auto *robotItem = dynamic_cast<QGraphicsEllipseItem *>(item);
-            auto *obstacleItem = dynamic_cast<QGraphicsRectItem *>(item);
-
-            if (robotItem || obstacleItem) {
-                if (selectedItem && selectedItem != item) {
-                    qDebug() << "farbim tehoto kkta:" << item->pos();
-                    setBackItemColor(selectedItem);
-                    selectedItem->setFlag(QGraphicsItem::ItemIsMovable, false);
-                }
-
-                if (selectedItem != item) {
-                    selectedItem = item;
-                    item->setFlag(QGraphicsItem::ItemIsMovable, true);
-                    initialPos = item->pos();
-                    initialMousePos = mapToScene(event->pos());
-                    setItemColor(item, Qt::green);
-                }
-            }
+            selectItem(item);
         }
     }
     QGraphicsView::mousePressEvent(event);
@@ -62,7 +44,9 @@ void EditorMapView::mouseReleaseEvent(QMouseEvent *event) {
 
         if (checkOverlap(selectedItem, newPos, selectedItem->boundingRect().size())) {
             selectedItem->setPos(initialPos);
+
         } else {
+            positionChanged(selectedItem, newPos);
             selectedItem->setPos(newPos);
         }
     }
@@ -82,7 +66,6 @@ void EditorMapView::setItemColor(QGraphicsItem *item, const QColor &color) {
 void EditorMapView::setBackItemColor(QGraphicsItem *item) {
     auto *rectItem = dynamic_cast<QGraphicsRectItem *>(item);
     auto *ellipseItem = dynamic_cast<QGraphicsEllipseItem *>(item);
-    qDebug() << "Mam farbit naspatky";
     if (rectItem) {
         rectItem->setBrush(QBrush(Qt::gray)); // Set obstacle color to gray
     } else if (ellipseItem) {
@@ -90,15 +73,10 @@ void EditorMapView::setBackItemColor(QGraphicsItem *item) {
     }
 }
 
-void EditorMapView::addRobotAtPosition(const QPointF &pos, const double &direction, double detectionRange, double turningAngle, bool turningDirection) {
+void EditorMapView::addRobotAtPosition(const QPointF &pos) {
     if (!checkOverlap(nullptr, pos, QSizeF(20, 20))) {
-        qDebug() << "Adding robot at position:" << pos;
+        emit robotAdded(pos);
 
-        Vector2D vectorPos = Vector2D(pos.x(), pos.y());
-        Vector2D vectorDirection = directionVectorFromDegrees(direction);
-
-        Robot robot(vectorPos, vectorDirection, detectionRange, turningAngle, turningDirection);
-        map->addRobot(robot);
         auto item = new QGraphicsEllipseItem(-10, -10, 20, 20); // Position relative to the item's top-left corner
         item->setPos(pos); // Set the position in scene coordinates
         item->setPen(Qt::NoPen);
@@ -109,7 +87,8 @@ void EditorMapView::addRobotAtPosition(const QPointF &pos, const double &directi
 
 void EditorMapView::addObstacleAtPosition(const QPointF &pos) {
     if (!checkOverlap(nullptr, pos, QSizeF(20, 20))) {
-        qDebug() << "Adding obstacle at position:" << pos;
+        emit obstacleAdded(pos);
+
         auto item = new QGraphicsRectItem(-10, -10, 20, 20); // Position relative to the item's top-left corner
         item->setPos(pos); // Set the position in scene coordinates
         item->setPen(Qt::NoPen);
@@ -120,31 +99,76 @@ void EditorMapView::addObstacleAtPosition(const QPointF &pos) {
 
 bool EditorMapView::checkOverlap(const QGraphicsItem *ignoreItem, const QPointF &pos, const QSizeF &size) const {
     QRectF newRect(pos.x() - size.width() / 2, pos.y() - size.height() / 2, size.width(), size.height());
-    qDebug() << "Checking overlap at position:" << pos << "with size:" << size;
             foreach (QGraphicsItem *item, scene->items()) {
             if (item == ignoreItem)
                 continue;
 
             QRectF itemRect = item->sceneBoundingRect();
             if (itemRect.intersects(newRect)) {
-                qDebug() << "Overlap detected with item:" << item << "at position:" << item->pos();
+                qDebug() << "Overlap detected at position:" << item->pos();
                 return true; // Overlap detected
             }
         }
     return false; // No overlap detected
 }
 
-QString EditorMapView::getMapDataAsString() const {
-    return "";
+void EditorMapView::positionChanged(QGraphicsItem *item, const QPointF &newPos) {
+    auto newPosVector = Vector2D(newPos.x(), newPos.y());
+    auto oldPosVector = Vector2D(item->pos().x(), item->pos().y());
+
+    if (item == selectedItem) {
+        if (auto *robotItem = dynamic_cast<QGraphicsEllipseItem *>(item)) {
+            emit robotPositionChanged(newPosVector, oldPosVector);
+        } else if (auto *obstacleItem = dynamic_cast<QGraphicsRectItem *>(item)) {
+            emit obstaclePositionChanged(newPosVector, oldPosVector);
+        }
+    }
 }
 
-Vector2D EditorMapView::directionVectorFromDegrees(double degrees) {
-    // Convert degrees to radians
-    float radians = qDegreesToRadians(degrees);
 
-    // Calculate the x and y components of the direction vector using trigonometry
-    float x = qCos(radians);
-    float y = qSin(radians);
+void EditorMapView::selectItem(QGraphicsItem *item) {
+    selectedRobot = nullptr;
 
-    return Vector2D(x, y);
+    auto robotItem = dynamic_cast<QGraphicsEllipseItem *>(item);
+    if (robotItem) {
+        // Iterate through robots
+        for (Robot &robot : *(map->getRobots())) {
+            if (robot.getPos() == Vector2D(item->pos().x(), item->pos().y())) {
+                // Robot found
+                selectedRobot = &robot;
+                if (selectedItem) {
+                    // Set previous item color back
+                    setBackItemColor(selectedItem);
+                }
+                selectedItem = item;
+                setItemColor(selectedItem, Qt::green);
+                return;
+            }
+        }
+    }
+
+    // Check if the item is an obstacle
+    auto obstacleItem = dynamic_cast<QGraphicsRectItem *>(item);
+    if (obstacleItem) {
+        // Iterate through obstacles
+        for (auto obstacle : *(map->getObstacles())) {
+            if (obstacle.getPos() == Vector2D(item->pos().x(), item->pos().y())) {
+                if (selectedItem) {
+                    // Set previous item color back
+                    setBackItemColor(selectedItem);
+                }
+                selectedItem = item;
+                setItemColor(selectedItem, Qt::green);
+                return;
+            }
+        }
+    }
 }
+
+Robot *EditorMapView::getSelectedRobot() {
+    return selectedRobot;
+}
+
+
+
+

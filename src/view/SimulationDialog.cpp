@@ -85,7 +85,10 @@ void SimulationDialog::loadFile() {
             QTextStream in(&file);
             // get map
             QString firstLine = in.readLine();
-            QStringList sizeParts = firstLine.split("x", QString::SkipEmptyParts);
+            QStringList sizeParts = firstLine.split("x", Qt::SkipEmptyParts);
+            for (auto& part : sizeParts) {
+                part = part.trimmed();
+            }
             if (sizeParts.size() == 2) {
                 bool ok;
                 size.x = sizeParts[0].toDouble(&ok);
@@ -102,7 +105,13 @@ void SimulationDialog::loadFile() {
             while (!in.atEnd()) {
                 QString line = in.readLine();
                 if (line.isEmpty() || line.startsWith("obstacles:")) break;
-                QStringList parts = line.split(";", QString::SkipEmptyParts);
+
+                QStringList parts = line.split("x", Qt::SkipEmptyParts);
+
+                for (auto& part : sizeParts) {
+                    part = part.trimmed();
+                }
+
                 if (parts.size() == 7) {
                     double posX = parts[0].toDouble();
                     double posY = parts[1].toDouble();
@@ -110,12 +119,14 @@ void SimulationDialog::loadFile() {
                     double dirY = parts[3].toDouble();
                     double angle = parts[4].toDouble();
                     double range = parts[5].toDouble();
-                    double speed = parts[6].toDouble();
+                    bool turningDirection = parts[6].toStdString() == "Right";
 
                     Vector2D pos(posX, posY);
                     Vector2D dir(dirX, dirY);
 
-                    Robot robot(pos, dir, angle, range, speed);
+                    RobotParams params = RobotParams(dir, range, angle, turningDirection);
+
+                    Robot robot(params, pos);
                     robots.emplace_back(robot);
 
                     qDebug() << "x: " << pos.x << " | y: " << pos.y;
@@ -128,7 +139,10 @@ void SimulationDialog::loadFile() {
 
             while (!in.atEnd()) {
                 QString line = in.readLine();
-                QStringList parts = line.split(";", QString::SkipEmptyParts);
+                QStringList parts = line.split("x", Qt::SkipEmptyParts);
+                for (auto& part : sizeParts) {
+                    part = part.trimmed(); // Trim leading and trailing whitespace
+                }
                 if (parts.size() == 2) {
                     double posX = parts[0].toDouble();
                     double posY = parts[1].toDouble();

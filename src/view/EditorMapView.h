@@ -9,19 +9,27 @@
 #include <QGraphicsRectItem>   // For obstacle representation
 #include "src/model/Map.h"
 
+class EditorDialog;
+
 class EditorMapView : public QGraphicsView {
     Q_OBJECT
 public:
+    Map *map;
+
     explicit EditorMapView(QWidget *parent = nullptr);
 
     void setMode(const QString& mode);
 
+    Robot *getSelectedRobot();
+
     void setEditMode(const QString &mode);
 
-    Vector2D directionVectorFromDegrees(double degrees);
-
     QString getMapDataAsString() const;
-
+signals:
+    void robotAdded(const QPointF& position);
+    void obstacleAdded(const QPointF& position);
+    void robotPositionChanged(const Vector2D& newPos, const Vector2D& oldPos);
+    void obstaclePositionChanged(const Vector2D& newPos, const Vector2D& oldPos);
 protected:
     // Override to handle mouse press events for placing items
     void mousePressEvent(QMouseEvent *event) override;
@@ -30,15 +38,13 @@ private:
     QGraphicsScene *scene;  // The scene where all items are displayed
     QString placementMode;       // Current editing mode
     QString mode;
-    Map *map;               // The map being edited
     QPointF initialPos; // Initial position when dragging an item
     QPointF initialMousePos; // Initial mouse position when dragging an item
     QGraphicsItem *selectedItem = nullptr; // The currently selected item
-    Robot *selectedRobot; // The currently selected item
-    Obstacle *selectedObstacle; // The currently selected obstacle
+    Robot *selectedRobot = nullptr; // The currently selected obstacle
 
     // Methods to handle adding robots/obstacles
-    void addRobotAtPosition(const QPointF &pos, const double &direction, double detectionRange, double turningAngle, bool turningDirection);
+    void addRobotAtPosition(const QPointF &pos);
 
     bool checkOverlap(const QGraphicsItem *ignoreItem, const QPointF& pos, const QSizeF& size) const;
 
@@ -49,6 +55,10 @@ private:
     static void setItemColor(QGraphicsItem *item, const QColor &color);
 
     static void setBackItemColor(QGraphicsItem *item);
+
+    void positionChanged(QGraphicsItem *item, const QPointF &newPos);
+
+    void selectItem(QGraphicsItem *item);
 };
 
 

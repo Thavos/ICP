@@ -1,3 +1,4 @@
+
 #include "EditorDialog.h"
 
 EditorDialog::EditorDialog(QWidget *parent) : QDialog(parent) {
@@ -16,6 +17,7 @@ void EditorDialog::setupUI(){
     modeBox = new QComboBox(this);
     modeBox->addItem("Placement Mode");
     modeBox->addItem("Editing Mode");
+    btnUpdateRobotParams = new QPushButton("Update Robot Parameters", this);
 
     robotDirectionInput = new QLineEdit(this);
     detectionRangeInput = new QLineEdit(this);
@@ -35,6 +37,7 @@ void EditorDialog::setupUI(){
     robotParamsLayout->addRow("Detection Range", detectionRangeInput);
     robotParamsLayout->addRow("Turning Direction", turningDirectionInput);
     robotParamsLayout->addRow("Turning Angle", turningAngleInput);
+    robotParamsLayout->addRow(btnUpdateRobotParams);
 
     auto *groupRobotParams = new QGroupBox("Robot Parameters", this);
     groupRobotParams->setLayout(robotParamsLayout);
@@ -61,7 +64,7 @@ void EditorDialog::setupUI(){
     setLayout(layout);
 
     // Connect the save button to the saveMap slot
-    connect(btnSave, &QPushButton::clicked, this, &EditorDialog::saveMap);
+    connect(btnSave, &QPushButton::clicked, this, &EditorDialog::exportMapToFile);
     connect(btnAddRobot, &QRadioButton::toggled, [this](bool checked){
         if (checked) mapView->setEditMode("Robot");
     });
@@ -73,19 +76,117 @@ void EditorDialog::setupUI(){
         printf("Selected mode: %s\n", mode.toStdString().c_str());
         mapView->setMode(mode);
     });
+    connect(mapView, &EditorMapView::robotAdded, this, &EditorDialog::handleAddRobot);
+    connect(mapView, &EditorMapView::obstacleAdded, this, &EditorDialog::handleAddObstacle);
+    connect(mapView, &EditorMapView::robotPositionChanged, this, &EditorDialog::handleRobotPositionChanged);
+    connect(mapView, &EditorMapView::obstaclePositionChanged, this, &EditorDialog::handleObstaclePositionChanged);
+    connect(btnUpdateRobotParams, &QPushButton::clicked, [this](){
+        updateRobotParams();
+    });
 }
 
-void EditorDialog::saveMap() {
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save Map"), "", tr("Map Files (*.txt)"));
-    if (fileName.isEmpty()) return;
+RobotParams EditorDialog::getRobotParams() {
+    Vector2D direction = directionVectorFromDegrees(robotDirectionInput->text().toDouble());
+    double detectionRange = detectionRangeInput->text().toDouble();
+    double turningAngle = turningAngleInput->text().toDouble();
+    bool turningDirection = (turningDirectionInput->currentText() == "Right"); // Assuming "Left" represents true
 
-    QFile file(fileName);
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        QMessageBox::warning(this, tr("Unable to open file"), file.errorString());
+    return RobotParams(direction, detectionRange, turningAngle, turningDirection);
+}
+
+
+Vector2D EditorDialog::directionVectorFromDegrees(double degrees) {
+    // Convert degrees to radians
+    double radians = qDegreesToRadians(degrees);
+
+    // Calculate the x and y components of the direction vector using trigonometry
+    double x = qCos(radians);
+    double y = qSin(radians);
+
+    return {x, y};
+}
+
+void EditorDialog::handleAddRobot(const QPointF &position) {
+    RobotParams params = getRobotParams();
+    QString turningDirection = params.turningDirection ? "right" : "left";
+    double direction = directionToDegrees(params.direction);
+    qDebug() << "Adding robot at position:" << position;
+    qDebug() << "Robot Params: Direction: " << direction << ", Detection Range: " << params.detectionRange
+             << ", Turning Angle: " << params.rotationAngle << ", Turning Direction: " << turningDirection;
+    mapView->map->addRobot(Robot(params, Vector2D(position.x(), position.y())));
+}
+
+void EditorDialog::handleAddObstacle(const QPointF &position) {
+    qDebug() << "Adding obstacle at position:" << position;
+    mapView->map->addObstacle(Obstacle(Vector2D(position.x(), position.y())));
+}
+
+void EditorDialog::handleRobotPositionChanged(const Vector2D &newPos, const Vector2D &oldPos) {
+    qDebug() << "Handling robot position change: (" << oldPos.x << ", " << oldPos.y << ") -> (" << newPos.x << ", " << newPos.y << ")";
+    mapView->map->moveRobot(oldPos, newPos);
+}
+
+void EditorDialog::handleObstaclePositionChanged(const Vector2D &newPos, const Vector2D &oldPos) {
+    qDebug() << "Handling obstacle position: (" << oldPos.x << ", " << oldPos.y << ") -> (" << newPos.x << ", " << newPos.y << ")";
+    mapView->map->moveObstacle(oldPos, newPos);
+}
+
+void EditorDialog::updateRobotParams() {
+    Robot *selectedRobot = mapView->getSelectedRobot();
+    if (selectedRobot != nullptr) {
+        qDebug() << "Selected robot old params: " << selectedRobot->getRotationAngle();
+        qDebug() << "New params: " << getRobotParams().rotationAngle;
+        selectedRobot->updateParameters(getRobotParams());
+    }
+}
+
+void EditorDialog::exportMapToFile() {
+    QDir appDir(QCoreApplication::applicationDirPath());
+
+    appDir.cdUp();
+
+    QString resourcesDirPath = appDir.filePath("resources");
+
+    QString filePath = QDir(resourcesDirPath).filePath("map69.txt");
+
+    QFile file(filePath);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
+        qDebug() << "Failed to open file for writing:" << file.errorString();
         return;
     }
 
+    // Open a QTextStream to write to the file
     QTextStream out(&file);
-    out << mapView->getMapDataAsString(); // Assuming getMapDataAsString() returns a string representation of the map
+
+    // Write map size header
+    out << "500x500\n\n";
+
+    // Write robots
+    out << "robots:\n";
+    for (auto& robot : *(mapView->map->getRobots())) {
+        const Vector2D& pos = robot.getPos();
+        const double direction = directionToDegrees(robot.getDir());
+        const double angle = robot.getRotationAngle();
+        const double range = robot.getDetectionRange();
+        const QString turningDirection = robot.getTurningDirection() ? "right" : "left";
+
+        out << pos.x << ";" << pos.y << ";" << direction<< ";"
+            << angle << ";" << range << ";" << turningDirection << "\n";
+    }
+
+    // Write obstacles
+    out << "\nobstacles:\n";
+    for (auto& obstacle : *(mapView->map->getObstacles())) {
+        const Vector2D& pos = obstacle.getPos();
+        out << pos.x << ";" << pos.y << "\n";
+    }
+
+    // Close the file
     file.close();
+}
+
+double EditorDialog::directionToDegrees(const Vector2D& direction) {
+    double radians = std::atan2(direction.y, direction.x);
+    double degrees = std::fmod(radians * 180.0 / M_PI + 360.0, 360.0); // Ensure the result is in the range [0, 360)
+    return degrees;
 }

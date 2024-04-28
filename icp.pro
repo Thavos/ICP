@@ -12,6 +12,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 HEADERS += src/controller/SimulationController.h \
             src/model/Map.h \
             src/model/Obstacle.h \
+            src/model/RobotParams.h \
             src/model/Robot.h \
             src/util/Vector2D.h \
             src/view/SimulationMapView.h \
@@ -22,6 +23,7 @@ HEADERS += src/controller/SimulationController.h \
 
 SOURCES += src/controller/SimulationController.cpp \
             src/model/Map.cpp \
+            src/model/RobotParams.cpp \
             src/model/Obstacle.cpp \
             src/model/Robot.cpp \
             src/util/Vector2D.cpp \
