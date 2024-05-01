@@ -19,6 +19,7 @@ void EditorMapView::setMode(const QString &m) {
 
 void EditorMapView::mousePressEvent(QMouseEvent *event) {
     QPointF scenePos = mapToScene(event->pos());
+    initialMousePos = scenePos;
     if (mode == "Placement Mode") {
         if (placementMode == "Robot") {
             addRobotAtPosition(scenePos);
@@ -29,6 +30,8 @@ void EditorMapView::mousePressEvent(QMouseEvent *event) {
         QGraphicsItem *item = scene->itemAt(scenePos, QTransform());
         if (item) {
             selectItem(item);
+            initialPos = item->pos();
+            qDebug() << "Selected item at position:" << item->pos();
         }
     }
     QGraphicsView::mousePressEvent(event);
@@ -38,16 +41,18 @@ void EditorMapView::mouseReleaseEvent(QMouseEvent *event) {
     QGraphicsView::mouseReleaseEvent(event);
 
     if (selectedItem && mode == "Editing Mode") {
-        QPointF diff = mapToScene(event->pos()) - initialMousePos;
+        QPointF newPos = mapToScene(event->pos());
 
-        QPointF newPos = initialPos + diff;
 
         if (checkOverlap(selectedItem, newPos, selectedItem->boundingRect().size())) {
+            qDebug() << "Overlap detected, setting back to initial position at" << initialPos;
             selectedItem->setPos(initialPos);
 
         } else {
+            qDebug() << "No overlap detected, setting new position to" << newPos;
             positionChanged(selectedItem, newPos);
             selectedItem->setPos(newPos);
+            initialPos = newPos;
         }
     }
 }
