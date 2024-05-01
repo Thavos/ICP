@@ -158,6 +158,13 @@ void EditorDialog::updateRobotParams() {
         qDebug() << "Selected robot old params: " << selectedRobot->getRotationAngle();
         qDebug() << "New params: " << getRobotParams().rotationAngle;
         selectedRobot->updateParameters(getRobotParams());
+
+        QGraphicsEllipseItem* robotGraphics = mapView->findRobotItemByPosition(QPointF(selectedRobot->getPos().x, selectedRobot->getPos().y));
+
+        if(robotGraphics){
+            mapView->updateRobotDirection(selectedRobot, robotGraphics);
+            robotGraphics->update();
+        }
     }
 }
 

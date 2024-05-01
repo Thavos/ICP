@@ -24,6 +24,10 @@ public:
 
     void setEditMode(const QString &mode);
 
+    QGraphicsEllipseItem* findRobotItemByPosition(const QPointF& position);
+
+    void updateRobotDirection(Robot* robot, QGraphicsEllipseItem* robotGraphics);
+
     QString getMapDataAsString() const;
 signals:
     void robotAdded(const QPointF& position);

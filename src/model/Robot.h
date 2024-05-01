@@ -1,6 +1,7 @@
 #ifndef ROBOT_H
 #define ROBOT_H
 
+#include <QPainter>
 #include <vector>
 #include "src/util/Vector2D.h"
 #include "src/model/RobotParams.h"
@@ -31,7 +32,6 @@ public:
     double getRotationAngle();
     double getDetectionRange();
     bool getTurningDirection();
-
 
     Vector2D updatePos();
     void updateParameters(const RobotParams& params);
