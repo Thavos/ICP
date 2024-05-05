@@ -19,6 +19,7 @@ void EditorMapView::setMode(const QString &m) {
 
 void EditorMapView::mousePressEvent(QMouseEvent *event) {
     QPointF scenePos = mapToScene(event->pos());
+    initialMousePos = scenePos;
     if (mode == "Placement Mode") {
         if (placementMode == "Robot") {
             addRobotAtPosition(scenePos);
@@ -29,6 +30,8 @@ void EditorMapView::mousePressEvent(QMouseEvent *event) {
         QGraphicsItem *item = scene->itemAt(scenePos, QTransform());
         if (item) {
             selectItem(item);
+            initialPos = item->pos();
+            qDebug() << "Selected item at position:" << item->pos();
         }
     }
     QGraphicsView::mousePressEvent(event);
@@ -38,16 +41,18 @@ void EditorMapView::mouseReleaseEvent(QMouseEvent *event) {
     QGraphicsView::mouseReleaseEvent(event);
 
     if (selectedItem && mode == "Editing Mode") {
-        QPointF diff = mapToScene(event->pos()) - initialMousePos;
+        QPointF newPos = mapToScene(event->pos());
 
-        QPointF newPos = initialPos + diff;
 
         if (checkOverlap(selectedItem, newPos, selectedItem->boundingRect().size())) {
+            qDebug() << "Overlap detected, setting back to initial position at" << initialPos;
             selectedItem->setPos(initialPos);
 
         } else {
+            qDebug() << "No overlap detected, setting new position to" << newPos;
             positionChanged(selectedItem, newPos);
             selectedItem->setPos(newPos);
+            initialPos = newPos;
         }
     }
 }
@@ -60,6 +65,33 @@ void EditorMapView::setItemColor(QGraphicsItem *item, const QColor &color) {
         rectItem->setBrush(QBrush(color));
     } else if (ellipseItem) {
         ellipseItem->setBrush(QBrush(color));
+    }
+}
+
+QGraphicsEllipseItem* EditorMapView::findRobotItemByPosition(const QPointF& position) {
+    QList<QGraphicsItem*> itemsAtPos = scene->items(position, Qt::IntersectsItemShape, Qt::DescendingOrder, QTransform());
+            foreach (QGraphicsItem* item, itemsAtPos) {
+            auto* ellipseItem = dynamic_cast<QGraphicsEllipseItem*>(item);
+            if (ellipseItem) {
+                return ellipseItem; // Return the first ellipse item found
+            }
+        }
+    return nullptr; // Return nullptr if no ellipse item is found at the position
+}
+
+void EditorMapView::updateRobotDirection(Robot* robot, QGraphicsEllipseItem* robotGraphics) {
+    if (!robotGraphics->childItems().isEmpty()) {
+        QGraphicsLineItem* directionLine = dynamic_cast<QGraphicsLineItem*>(robotGraphics->childItems().first());
+        if (directionLine) {
+            Vector2D dir = robot->getDir();
+            // Assuming that the line should originate from the center of the robot and extend outwards
+            QPointF center = robotGraphics->boundingRect().center();
+            directionLine->setLine(center.x(), center.y(), center.x() + 20 * dir.x, center.y() + 20 * dir.y);
+        } else {
+            qDebug() << "First child item is not a QGraphicsLineItem";
+        }
+    } else {
+        qDebug() << "No child items found in robotGraphics";
     }
 }
 
@@ -77,10 +109,17 @@ void EditorMapView::addRobotAtPosition(const QPointF &pos) {
     if (!checkOverlap(nullptr, pos, QSizeF(20, 20))) {
         emit robotAdded(pos);
 
-        auto item = new QGraphicsEllipseItem(-10, -10, 20, 20); // Position relative to the item's top-left corner
-        item->setPos(pos); // Set the position in scene coordinates
+        auto robot = map->getRobot(Vector2D(pos.x(), pos.y()));
+
+        auto item = new QGraphicsEllipseItem(-10, -10, 20, 20);
+        item->setPos(pos);
         item->setPen(Qt::NoPen);
         item->setBrush(Qt::blue);
+
+        Vector2D dir = robot->getDir();
+        auto* directionLine = new QGraphicsLineItem(0, 0, 20 * dir.x, 20 * dir.y, item);
+        directionLine->setPen(QPen(Qt::red, 2));
+
         scene->addItem(item);
     }
 }

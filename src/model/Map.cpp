@@ -47,6 +47,15 @@ void Map::addObstacle(const Obstacle& newObstacle) {
     obstacles.push_back(newObstacle);
 }
 
+Robot* Map::getRobot(const Vector2D& pos) {
+    for (Robot& robot : robots) {
+        if (robot.getPos() == pos) {
+            return &robot;
+        }
+    }
+    return nullptr;
+}
+
 Vector2D Map::getSize() {
     return size;
 }

@@ -33,6 +33,8 @@ void Robot::updateParameters(const RobotParams& params) {
     qDebug() << "Robot parameters updated";
 }
 
+
+
 Vector2D Robot::updatePos() {
     Vector2D newPos = pos + dir * speed;
     return newPos;

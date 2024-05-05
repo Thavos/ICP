@@ -17,6 +17,7 @@
 #include <QFormLayout>
 #include <QStandardPaths>
 #include <QCoreApplication>
+#include <QMessageBox>
 
 #include "SimulationMapView.h"
 #include "EditorMapView.h"
@@ -44,11 +45,12 @@ private:
     QRadioButton *btnAddRobot;
     QRadioButton *btnAddObstacle;
     QPushButton *btnUpdateRobotParams;
+    QLineEdit *mapName;
 
     static Vector2D directionVectorFromDegrees(double degrees);
     double directionToDegrees(const Vector2D& direction);
     void setupUI();
-    void exportMapToFile();
+    void exportMapToFile(const QString& fileName);
 };
 
 

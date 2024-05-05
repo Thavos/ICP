@@ -36,6 +36,8 @@ public:
 
     std::vector<Robot>* getRobots();
     std::vector<Obstacle>* getObstacles();
+
+    Robot* getRobot(const Vector2D& pos);
     
     Vector2D getSize();
 

@@ -17,6 +17,7 @@ void EditorDialog::setupUI(){
     modeBox = new QComboBox(this);
     modeBox->addItem("Placement Mode");
     modeBox->addItem("Editing Mode");
+    mapName = new QLineEdit(this);
     btnUpdateRobotParams = new QPushButton("Update Robot Parameters", this);
 
     robotDirectionInput = new QLineEdit(this);
@@ -30,6 +31,13 @@ void EditorDialog::setupUI(){
     robotDirectionInput->setToolTip("Enter the direction of the robot here(degrees)");
     detectionRangeInput->setToolTip("Enter the detection range of the robot here");
     turningAngleInput->setToolTip("Enter the turning angle of the robot here(degrees)");
+
+    mapName->setText("map");
+
+    //Robot parameters starting values
+    robotDirectionInput->setText("25");
+    detectionRangeInput->setText("50");
+    turningAngleInput->setText("45");
 
     //Robot parameters layout
     auto* robotParamsLayout = new QFormLayout();
@@ -52,19 +60,32 @@ void EditorDialog::setupUI(){
     auto *groupMode = new QGroupBox("Mode", this);
     groupMode->setLayout(modeLayout);
 
+    //Layout for saving map
+
+    auto* mapSaveLayout = new QFormLayout();
+    mapSaveLayout->addRow("Map Name", mapName);
+    mapSaveLayout->addRow(btnSave);
+
+    auto* groupMapSave = new QGroupBox("Save Map", this);
+    groupMapSave->setLayout(mapSaveLayout);
+
+    //Layout for the left bar
 
     auto *verticalLayout = new QVBoxLayout();
     verticalLayout->addWidget(groupMode);
     verticalLayout->addWidget(groupRobotParams);
+    verticalLayout->addWidget(groupMapSave);
 
     auto *layout = new QHBoxLayout();
     layout->addLayout(verticalLayout);
     layout->addWidget(mapView);
-    layout->addWidget(btnSave);
     setLayout(layout);
 
     // Connect the save button to the saveMap slot
-    connect(btnSave, &QPushButton::clicked, this, &EditorDialog::exportMapToFile);
+    connect(btnSave, &QPushButton::clicked, [this]() {
+        QString fileName = mapName->text();  // Define the QString value you want to pass
+        exportMapToFile(fileName);
+    });
     connect(btnAddRobot, &QRadioButton::toggled, [this](bool checked){
         if (checked) mapView->setEditMode("Robot");
     });
@@ -137,17 +158,33 @@ void EditorDialog::updateRobotParams() {
         qDebug() << "Selected robot old params: " << selectedRobot->getRotationAngle();
         qDebug() << "New params: " << getRobotParams().rotationAngle;
         selectedRobot->updateParameters(getRobotParams());
+
+        QGraphicsEllipseItem* robotGraphics = mapView->findRobotItemByPosition(QPointF(selectedRobot->getPos().x, selectedRobot->getPos().y));
+
+        if(robotGraphics){
+            mapView->updateRobotDirection(selectedRobot, robotGraphics);
+            robotGraphics->update();
+        }
     }
 }
 
-void EditorDialog::exportMapToFile() {
+void EditorDialog::exportMapToFile(const QString& fileName) {
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "Save Map", "Are you sure you want to save the map?",
+                                  QMessageBox::Yes | QMessageBox::No);
+
+    if (reply == QMessageBox::No) {
+        // If the user clicked "No", do nothing
+        return;
+    }
+
     QDir appDir(QCoreApplication::applicationDirPath());
 
     appDir.cdUp();
 
     QString resourcesDirPath = appDir.filePath("resources");
 
-    QString filePath = QDir(resourcesDirPath).filePath("map69.txt");
+    QString filePath = QDir(resourcesDirPath).filePath(fileName + ".txt");
 
     QFile file(filePath);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
@@ -183,6 +220,7 @@ void EditorDialog::exportMapToFile() {
 
     // Close the file
     file.close();
+    this->close();
 }
 
 double EditorDialog::directionToDegrees(const Vector2D& direction) {
