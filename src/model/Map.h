@@ -2,11 +2,9 @@
 #define MAP_H
 
 #include <vector>
-#include <utility>
-#include <QDebug>
-#include "src/util/Vector2D.h"
-#include "src/model/Obstacle.h"
-#include "src/model/Robot.h"
+#include "Obstacle.h"
+#include "Robot.h"
+#include "./src/util/Vector2D.h"
 
 // xhruzs00
 
@@ -18,33 +16,80 @@
  */
 class Map {
 public:
+    /**
+     * @brief Constructs a new Map object.
+     */
     Map();
-    Map(double x, double y);
-    Map(Vector2D size);
+
+    /**
+     * @brief Destroys the Map object.
+     */
     ~Map();
 
-    void setSize(Vector2D setSize);
-    void setSize(double x, double y);
-    void setRobots(std::vector<Robot>&& newRobots);
-    void setObstacles(std::vector<Obstacle>&& newObstacles);
+    /**
+     * @brief Sets the size of the map.
+     *
+     * @param newSize The new size of the map.
+     */
+    void SetSize(Vector2D newSize);
 
-    void addRobot(const Robot& newRobot);
-    void addObstacle(const Obstacle& newObstacle);
+    /**
+     * @brief Gets the size of the map.
+     *
+     * @return Vector2D The size of the map.
+     */
+    Vector2D GetSize();
 
-    void moveRobot(const Vector2D& oldPos, const Vector2D& newPos);
-    void moveObstacle(const Vector2D& oldPos, const Vector2D& newPos);
-
-    std::vector<Robot>* getRobots();
-    std::vector<Obstacle>* getObstacles();
-
-    Robot* getRobot(const Vector2D& pos);
+    /**
+     * @brief Gets a reference to the vector containing robots.
+     *
+     * @return std::vector<Robot>& A reference to the vector containing robots.
+     */
+    std::vector<Robot>& GetRobots();
     
-    Vector2D getSize();
+    /**
+     * @brief Gets a reference to the vector containing obstacles.
+     *
+     * @return std::vector<Obstacle>& A reference to the vector containing obstacles.
+     */
+    std::vector<Obstacle>& GetObstacles();
+
+    /**
+     * @brief Creates a new robot and adds it to the map.
+     *
+     * @param pos The position of the new robot.
+     * @param dir The direction of the new robot.
+     * @param range The detection range of the new robot.
+     * @param rotation The rotation angle base of the new robot.
+     * @param rotateRight The direction of rotation of the new robot.
+     */
+    void CreateRobot(Vector2D pos, Vector2D dir, double range, double rotation, bool rotateRight);
+   
+    /**
+     * @brief Creates a new obstacle and adds it to the map.
+     *
+     * @param pos The position of the new obstacle.
+     */
+    void CreateObstacle(Vector2D pos);
+
+    /**
+     * @brief Deletes the robot at the specified position from the map.
+     *
+     * @param pos The position of the robot to delete.
+     */
+    void DeleteRobot(Vector2D pos);
+
+    /**
+     * @brief Deletes the obstacle at the specified position from the map.
+     *
+     * @param pos The position of the obstacle to delete.
+     */
+    void DeleteObstacle(Vector2D pos);
 
 private:
-    std::vector<Robot> robots;
-    std::vector<Obstacle> obstacles;
-    Vector2D size;
+    Vector2D size; /**< The size of the map. */
+    std::vector<Robot> robots; /**< Vector containing robots. */
+    std::vector<Obstacle> obstacles; /**< Vector containing obstacles. */
 };
 
 #endif

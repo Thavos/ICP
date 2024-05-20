@@ -1,11 +1,45 @@
-#include "SimulationController.h"
+#include "EditorController.h"
 
 // xhruzs00
 
-SimulationController::SimulationController() {}
-SimulationController::~SimulationController() {}
+EditorController::EditorController() {}
+EditorController::~EditorController() {}
 
-void SimulationController::ProcessFile(QString filePath) {
+void EditorController::SaveFile(QString filePath) {
+    QFile file(filePath);
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream out(&file);
+
+        // Write map size
+        Vector2D size = map.GetSize();
+        out << size.x << "x" << size.y << endl;
+
+
+        // Write robots
+        out << endl; // empty line in between
+        out << "robots:" << endl;
+        for (const auto& robot : map.GetRobots()) {
+            Vector2D pos = robot.GetPos();
+            Vector2D dir = robot.GetDir();
+            double angle = atan2(dir.y, dir.x) * 180 / M_PI; // Convert radians to degrees
+            out << pos.x << ";" << pos.y << ";" << angle << ";" << robot.GetRange() << ";" << robot.GetRotation() << ";" << (robot.GetRotateRight() ? "right" : "left") << endl;
+        }
+
+        // Write obstacles
+        out << endl; // empty line in between
+        out << "obstacles:" << endl;
+        for (const auto& obstacle : map.GetObstacles()) {
+            Vector2D pos = obstacle.GetPos();
+            out << pos.x << ";" << pos.y << endl;
+        }
+
+        file.close();
+    } else {
+        qDebug() << "Failed to open file for writing:" << filePath;
+    }
+}
+
+void EditorController::LoadFile(QString filePath) {
     QFile file(filePath);
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
 
@@ -88,25 +122,58 @@ void SimulationController::ProcessFile(QString filePath) {
     }
 }
 
-void SimulationController::update() {
-    std::vector<Robot>& robots = map.GetRobots();
-    std::vector<Obstacle>& obstacles = map.GetObstacles();
-
-    Vector2D size = map.GetSize();
-
-    for (Robot& robot : robots) {
-        robot.UpdatePos(size, obstacles);
-    }
+void EditorController::SetMapSize(Vector2D size) {
+    map.SetSize(size);
 }
 
-Vector2D SimulationController::GetMapSize() {
+Vector2D EditorController::GetMapSize() {
     return map.GetSize();
 }
 
-std::vector<Robot>& SimulationController::GetRobots() {
+std::vector<Robot>& EditorController::GetRobots() {
     return map.GetRobots();
 }
 
-std::vector<Obstacle>& SimulationController::GetObstacles() {
+std::vector<Obstacle>& EditorController::GetObstacles() {
     return map.GetObstacles();
+}
+
+void EditorController::CreateRobot(Vector2D pos, double angle, double range, double rotation, bool rotateRight) {
+    Vector2D dir = Vector2D::zero;
+    double rad = angle * M_PI / 180;
+    dir.x = cos(rad);
+    dir.y = sin(rad);
+    double magnitude = sqrt(dir.x * dir.x + dir.y * dir.y);
+    dir.x /= magnitude;
+    dir.y /= magnitude;
+    
+    map.CreateRobot(pos, dir, range, rotation, rotateRight);
+}
+
+void EditorController::CreateObstacle(Vector2D pos) {
+    map.CreateObstacle(pos);
+}
+
+void EditorController::DeleteRobot(Vector2D pos) {
+    std::vector<Robot> robots = map.GetRobots();
+
+    for (Robot& robot : robots) {
+        Vector2D robotPos = robot.GetPos();
+        if (Vector2D::Distance(robotPos, pos) <= 10) {
+            map.DeleteRobot(robotPos);
+            return;
+        }
+    }
+}
+
+void EditorController::DeleteObstacle(Vector2D pos) {
+    std::vector<Obstacle> obstacles = map.GetObstacles();
+
+    for (Obstacle& obstacle : obstacles) {
+        Vector2D obstaclePos = obstacle.GetPos();
+        if (Vector2D::Distance(obstaclePos, pos) <= 15) {
+            map.DeleteObstacle(obstaclePos);
+            return;
+        }
+    }
 }

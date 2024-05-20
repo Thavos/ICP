@@ -1,27 +1,46 @@
-#ifndef ICP_MAINWINDOW_H
-#define ICP_MAINWINDOW_H
+#ifndef CENTEREDWINDOW_H
+#define CENTEREDWINDOW_H
 
-#include <QMainWindow>
+#include <QScreen>
 #include <QPushButton>
-#include <QVBoxLayout>
-#include <QDebug>
-#include <QTimer>
-#include "EditorDialog.h"
-#include "SimulationDialog.h"
+#include <QHBoxLayout>
+#include <QApplication>
+#include <QGuiApplication>
 
-class MainWindow  : public QMainWindow{
-    Q_OBJECT;
+#include "EditorView.h"
+#include "SimulationView.h"
+
+// xsnope04
+
+/**
+ * @brief The MainWindow class represents the main window of the application.
+ * 
+ * This winow shows four buttons total:
+ * - Simulation    -    Starts the simulation window.
+ * - New Map       -    Opens the editor without loading a file.
+ * - Editor        -    Opens the editor with an option to load an initial map configuration.
+ * - Quit          -    Exits the application.
+ */
+class MainWindow : public QWidget {
+    Q_OBJECT
+
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+    /**
+     * @brief Constructs a MainWindow object.
+     * @param parent The parent widget.
+     */
+    MainWindow(QWidget *parent = nullptr);
 
-signals:
-    void simulationRequested();
-    void editorRequested();
+    /**
+     * @brief Displays the simulation view.
+     */
+    void showSimulationView();
 
-private slots:
-    void onSimulationClicked();
-    void onEditorClicked();
+    /**
+     * @brief Displays the editor view.
+     * @param fromExisting Flag indicating whether we want to open editor and load initial data.
+     */
+    void showEditorView(bool fromExisting);
 };
 
-
-#endif //ICP_MAINWINDOW_H
+#endif

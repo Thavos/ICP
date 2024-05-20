@@ -2,78 +2,43 @@
 
 // xhruzs00
 
-Map::Map() {
-    size.x = 0;
-    size.y = 0;
-}
-Map::Map(double x, double y) {
-    size.x = x;
-    size.y = y;
-}
-Map::Map(Vector2D size) : size(size) {}
+Map::Map() {}
 Map::~Map() {}
 
-void Map::setSize(Vector2D setSize) {
-    size.x = setSize.x;
-    size.y = setSize.y;
+void Map::SetSize(Vector2D newSize) {
+    size = newSize;
 }
 
-void Map::setSize(double x, double y) {
-    size.x = x;
-    size.y = y;
-}
-
-void Map::setRobots(std::vector<Robot>&& newRobots) {
-    robots = std::move(newRobots);
-}
-
-void Map::setObstacles(std::vector<Obstacle>&& newObstacles) {
-    obstacles = std::move(newObstacles);
-}
-
-std::vector<Robot>* Map::getRobots() {
-    return &robots;
-}
-
-std::vector<Obstacle>* Map::getObstacles() {
-    return &obstacles;
-}
-
-void Map::addRobot(const Robot& newRobot) {
-    robots.push_back(newRobot);
-}
-
-void Map::addObstacle(const Obstacle& newObstacle) {
-    obstacles.push_back(newObstacle);
-}
-
-Robot* Map::getRobot(const Vector2D& pos) {
-    for (Robot& robot : robots) {
-        if (robot.getPos() == pos) {
-            return &robot;
-        }
-    }
-    return nullptr;
-}
-
-Vector2D Map::getSize() {
+Vector2D Map::GetSize() {
     return size;
 }
 
-void Map::moveRobot(const Vector2D& oldPos, const Vector2D& newPos) {
-    for (Robot& robot : robots) {
-        if (robot.getPos() == oldPos) {
-            robot.setPos(newPos);
-            return;
-        }
-    }
+std::vector<Robot>& Map::GetRobots() {
+    return robots;
 }
 
-void Map::moveObstacle(const Vector2D& oldPos, const Vector2D& newPos) {
-    for (Obstacle& obstacle : obstacles) {
-        if (obstacle.getPos() == oldPos) {
-            obstacle.setPos(newPos);
-            return;
-        }
-    }
+std::vector<Obstacle>& Map::GetObstacles() {
+    return obstacles;
+}
+
+void Map::CreateRobot(Vector2D pos, Vector2D dir, double range, double rotation, bool rotateRight) {
+    Robot newRobot(pos, dir, range, rotation, rotateRight);
+    robots.emplace_back(newRobot);
+}
+
+void Map::CreateObstacle(Vector2D pos) {
+    Obstacle newObstacle(pos);
+    obstacles.emplace_back(newObstacle);
+}
+
+void Map::DeleteRobot(Vector2D pos) {
+    robots.erase(std::remove_if(robots.begin(), robots.end(), [&pos](const Robot& robot) {
+        return robot.GetPos() == pos;
+    }), robots.end());
+}
+
+void Map::DeleteObstacle(Vector2D pos) {
+    obstacles.erase(std::remove_if(obstacles.begin(), obstacles.end(), [&pos](const Obstacle& obstacle) {
+        return obstacle.GetPos() == pos;
+    }), obstacles.end());
 }

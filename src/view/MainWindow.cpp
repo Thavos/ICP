@@ -1,36 +1,46 @@
 #include "MainWindow.h"
 
+// xsnope04
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent){
-    auto *widget = new QWidget(this);
-    auto *layout = new QVBoxLayout(widget);
+MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
+    setFixedSize(600, 600);
 
-    auto *btnSimulation = new QPushButton("Start Simulation", widget);
-    btnSimulation->resize(80,50);
-    auto *btnEditor = new QPushButton("Open Map Editor", widget);
-    btnEditor->resize(80,50);
+    QHBoxLayout *layout = new QHBoxLayout(this);
+    QPushButton *simulationButton = new QPushButton("Simulation", this);
+    QPushButton *newMapButton = new QPushButton("New Map", this);
+    QPushButton *editorButton = new QPushButton("Edit Map", this);
+    QPushButton *quitButton = new QPushButton("Quit", this);
 
-    layout->addWidget(btnSimulation);
-    layout->addWidget(btnEditor);
-    widget->setLayout(layout);
+    layout->addWidget(simulationButton);
+    layout->addWidget(newMapButton);
+    layout->addWidget(editorButton);
+    layout->addWidget(quitButton);
 
-    resize(600,400);
-    setCentralWidget(widget);
+    layout->setAlignment(Qt::AlignCenter);
 
-    // Connections
-    connect(btnSimulation, &QPushButton::clicked, this, &MainWindow::onSimulationClicked);
-    connect(btnEditor, &QPushButton::clicked, this, &MainWindow::onEditorClicked);
+    connect(simulationButton, &QPushButton::clicked, this, &MainWindow::showSimulationView);
+    connect(newMapButton, &QPushButton::clicked, this, [this]() { showEditorView(false); });
+    connect(editorButton, &QPushButton::clicked, this, [this]() { showEditorView(true); });
+    connect(quitButton, &QPushButton::clicked, qApp, &QApplication::quit);
+
+    setLayout(layout);
+
+    QRect screenGeometry = QGuiApplication::primaryScreen()->geometry();
+    move(screenGeometry.center() - rect().center());
 }
 
-void MainWindow::onSimulationClicked() {
-    auto *dialog = new SimulationDialog(this);
-    dialog->setAttribute(Qt::WA_DeleteOnClose);
-    dialog->show();
-    dialog->exec();
+void MainWindow::showSimulationView() {
+    SimulationView *simulationView = new SimulationView();
+    simulationView->setAttribute(Qt::WA_DeleteOnClose);
+    simulationView->show();
+    connect(simulationView, &SimulationView::closed, this, &MainWindow::show);
+    hide();
 }
 
-void MainWindow::onEditorClicked() {
-    auto *dialog = new EditorDialog(this);
-    dialog->setAttribute(Qt::WA_DeleteOnClose);
-    dialog->show();
+void MainWindow::showEditorView(bool fromExisting) {
+    EditorView *editorView = new EditorView(nullptr, fromExisting); // Pass the flag to the constructor
+    editorView->setAttribute(Qt::WA_DeleteOnClose);
+    editorView->show();
+    connect(editorView, &EditorView::closed, this, &MainWindow::show);
+    hide();
 }
